@@ -1,0 +1,83 @@
+
+└── cuanto_me_conoces\
+    │
+    ├── .gitignore
+    ├── READMI.md
+    ├── requirements.txt
+    ├── pyproject.toml
+    ├── .env.example
+    │    
+    ├── .venv\
+    │
+    ├── docs\
+    │   └── arquitectura.md  			
+    │
+    ├── assets\
+    │   ├── imagenes\
+    │   ├── iconos\
+    │   ├── sound\
+    │   └── fonts\
+    │ 
+    ├── data_local\						
+    │   ├── preguntas.json					
+    │   ├── eventos.json
+    │   ├── quizz.json
+    │   ├── participantes.json
+    │   ├── ranking.json
+    │   └── mensajes.json				
+    │
+    ├── src\
+    │   ├── __init__.py
+    │   ├── main.py
+    │   │
+    │   ├── vistas\
+    │   │   ├── __init__.py
+    │   │   ├── home_flet.py
+    │   │   ├── creador_flet.py
+    │   │   ├── player_flet.py
+    │   │   ├── qr_flet.py
+    │   │   ├── evento_flet.py
+    │   │   └── menu_local_flet.py			
+    │   │ 
+    │   ├── models\
+    │   │   ├── __init__.py
+    │   │   ├── preguntas.py			
+    │   │   ├── quizz.py
+    │   │   ├── comodin.py				
+    │   │   ├── evento.py				
+    │   │   ├── creador.py
+    │   │   ├── jugador.py				
+    │   │   └── mensajes.py
+    │   │
+    │   ├── servicios\
+    │   │   ├── __init__
+    │   │   ├── qrcode_s.py
+    │   │   ├── supabase_s.py
+    │   │   ├── guardado_local_s.py	
+    │   │   ├── puntos_s.py			
+    │   │   ├── craedor_s.py			
+    │   │   ├── quizz_s.py				
+    │   │   ├── sync_s.py		
+    │   │   └── ranking_s.py			
+    │   │
+    │   ├── repository\
+    │   │   ├── __init__
+    │   │   └── esquemaSQL.py
+    │   │
+    │   ├── utils\
+    │   │   ├──__init__
+    │   │   ├── constants.py
+    │   │   ├── timer.py
+    │   │   └── validacion.py
+    │   │ 
+    │   └── configuracion\
+    │       ├── __init__.py
+    │       └── configuracion.py
+    │
+    └──  test\
+        ├── __init__.py
+        ├── quizz_t.py
+        ├── qr_t.py
+        └── score_t.py
+    
+    
