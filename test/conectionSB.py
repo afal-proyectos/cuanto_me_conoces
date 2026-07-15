@@ -15,4 +15,4 @@ client = create_client(url, key)
 response = client.table("quizzes").select("*").execute()
 # .data es el atributo que contiene los datos de la respuesta de la base de datos.
 # Existen otros atributos como .status_code, .error, .count, etc.
-# print(response.data)
+print(response.data)
