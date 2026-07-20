@@ -1,87 +1,81 @@
--- ============================================
--- TABLA: quizzes
--- ============================================
-create table quizzes (
-    id uuid primary key default gen_random_uuid(),
-    creator_name text not null,
-    title text not null,
-    status text default 'open',       -- 'open' | 'closed'
-    created_at timestamptz default now()
+CREATE TABLE "Quizz"(
+    "id_quizz" UUID NOT NULL,
+    "id_creador" INTEGER NOT NULL,
+    "id_evento" INTEGER NOT NULL,
+    "hora_creacion" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "estado" BOOLEAN NOT NULL DEFAULT TRUE,
+    "completado" BOOLEAN NOT NULL DEFAULT FALSE,
+    "total_preguntas" INTEGER NOT NULL,
+
+    CONSTRAINT "pk_quizz" PRIMARY KEY("id_quizz")
+);
+
+CREATE TABLE "Preguntas"(
+    "id_pregunta" UUID NOT NULL,
+    "texto_pregunta" TEXT NOT NULL,
+    "id_tipo_pregunta" INTEGER NOT NULL,
+
+    CONSTRAINT "pk_preguntas" PRIMARY KEY("id_pregunta")
+);
+
+CREATE TABLE "Quizz/Preguntas"(
+    "id_quizz" UUID NOT NULL,
+    "id_pregunta" UUID NOT NULL,
+    "index_pregunta" INTEGER NOT NULL,
+
+    CONSTRAINT "pk_quizz_preguntas" PRIMARY KEY("id_quizz", "id_pregunta"),
+    CONSTRAINT "fk_quizz_preguntas_quizz" FOREIGN KEY("id_quizz") 
+        REFERENCES "Quizz"("id_quizz"),
+    CONSTRAINT "fk_quizz_preguntas_preguntas" FOREIGN KEY("id_pregunta") 
+        REFERENCES "Preguntas"("id_pregunta")
 );
 
 
-create policy "cualquiera puede crear un quiz"
-    on quizzes for insert
-    with check (true);
+CREATE TABLE "Jugadores"(
+    "id_jugador" UUID NOT NULL,
+    "nombre_jugador" VARCHAR(255) NOT NULL,
+    "hora_creacion" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
 
-create policy "cualquiera puede leer un quiz"
-    on quizzes for select
-    using (true);
-
-
--- ============================================
--- TABLA: questions
--- ============================================
-create table questions (
-    id uuid primary key default gen_random_uuid(),
-    quiz_id uuid references quizzes(id) on delete cascade,
-    order_index int not null,
-    question_text text not null,
-    options jsonb not null,           -- ["Opción A", "Opción B", "Opción C"]
-    correct_answer text not null,     -- para v1: solo opción múltiple, un solo string
-    points int default 10
+    CONSTRAINT "pk_jugadores" PRIMARY KEY("id_jugador")
 );
 
-alter table questions enable row level security;
+CREATE TABLE "Respuestas"(
+    "id_quizz" UUID NOT NULL,
+    "id_jugador" UUID NOT NULL,
+    "hora_envio" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "completada" BOOLEAN NOT NULL DEFAULT FALSE,
+    "lista_respuesta" jsonb NOT NULL,
 
-create policy "cualquiera puede crear preguntas"
-    on questions for insert
-    with check (true);
-
-create policy "cualquiera puede leer preguntas"
-    on questions for select
-    using (true);
-
-
--- ============================================
--- TABLA: players
--- ============================================
-create table players (
-    id uuid primary key default gen_random_uuid(),
-    quiz_id uuid references quizzes(id) on delete cascade,
-    player_name text not null,
-    joined_at timestamptz default now()
+    CONSTRAINT "pk_respuestas" PRIMARY KEY("id_quizz", "id_jugador"),
+    CONSTRAINT "fk_respuestas_quizz" FOREIGN KEY("id_quizz")
+        REFERENCES "Quizz"("id_quizz"),
+    CONSTRAINT "fk_respuestas_jugadores" FOREIGN KEY("id_jugador") 
+        REFERENCES "Jugadores"("id_jugador")
 );
 
-alter table players enable row level security;
+CREATE TABLE "Opciones"(
+    "id_opcion" INTEGER NOT NULL,
+    "texto_opcion" TEXT NOT NULL,
+    "puntaje" INTEGER NOT NULL DEFAULT 0,
 
-create policy "cualquiera puede registrarse como jugador"
-    on players for insert
-    with check (true);
-
-create policy "cualquiera puede leer jugadores"
-    on players for select
-    using (true);
-
-
--- ============================================
--- TABLA: results
--- ============================================
-create table results (
-    id uuid primary key default gen_random_uuid(),
-    player_id uuid references players(id) on delete cascade,
-    quiz_id uuid references quizzes(id) on delete cascade,
-    answers jsonb not null,           -- [{"question_id": "...", "answer": "..."}]
-    score int not null,
-    submitted_at timestamptz default now()
+    CONSTRAINT "pk_opciones" PRIMARY KEY("id_opcion")
 );
 
-alter table results enable row level security;
+CREATE TABLE "Preguntas/Opciones"(
+    "id_pregunta" UUID NOT NULL,
+    "id_opciones" INTEGER NOT NULL,
+    "index_opcion" INTEGER NOT NULL,
 
-create policy "cualquiera puede enviar resultados"
-    on results for insert
-    with check (true);
+    CONSTRAINT "pk_preguntas_opciones" PRIMARY KEY("id_pregunta", "id_opciones"),
+    CONSTRAINT "fk_preguntas_opciones_preguntas" FOREIGN KEY("id_pregunta") 
+        REFERENCES "Preguntas"("id_pregunta"),
+    CONSTRAINT "fk_preguntas_opciones_opciones" FOREIGN KEY("id_opciones") 
+        REFERENCES "Opciones"("id_opcion")  
+);
 
-create policy "cualquiera puede leer resultados (para el ranking)"
-    on results for select
-    using (true);
+ALTER TABLE "Quizz" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY modificar_quizz ON "Quizz" 
+FOR UPDATE
+USING (estado = FALSE)       -- Solo te deja tocarlo si HOY su estado es FALSE
+WITH CHECK (estado = FALSE);  -- Tampoco te deja cambiar el estado a TRUE mediante un update común

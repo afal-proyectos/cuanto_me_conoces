@@ -2,10 +2,9 @@ import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-load_dotenv()
 
-
-class SupabaseService:
+class SupabaseServicio:
+    load_dotenv()
     """
     Capa de acceso a datos (Repository/CRUD) para la v1.
     Todos los metodos son sincronos y devuelven estructuras
@@ -13,137 +12,215 @@ class SupabaseService:
     """
 
     def __init__(self):
-        url = os.environ["SUPABASE_URL"]
-        key = os.environ["SUPABASE_ANON_KEY"]
-        self.client: Client = create_client(url, key)
+        self.url: str = os.getenv("SUPABASE_URL")
+        self.key: str = os.getenv("SUPABASE_ANON_KEY")
+        self.client: Client = create_client(self.url, self.key)
 
     # ------------------------------------------------------------------
-    # CREADOR: crear quiz
+    # Métodos de la tabla quizz
     # ------------------------------------------------------------------
-    def crear_quiz(self, creator_name: str, title: str) -> dict:
+    def crear_quizz(
+        self, id_quizz: str, id_creador: int, id_evento: int, total_preguntas: int
+    ):
+        """Inserta un nuevo Quizz en la base de datos."""
+        try:
+            datos = {
+                "id_quizz": id_quizz,
+                "id_creador": id_creador,
+                "id_evento": id_evento,
+                "total_preguntas": total_preguntas,
+                # 'hora_creacion' la puedes manejar desde Python o dejar que Supabase la ponga con now() si lo configuraste así.
+                # 'estado' y 'completado' toman sus valores por defecto automáticamente.
+            }
+            respuesta = self.client.table("Quizz").insert(datos).execute()
+            return respuesta.data
+        except Exception as e:
+            print(f"Error al crear quizz: {e}")
+            return None
+
+    def obtener_quizz(self, id_quizz: str):
+        """Consulta y devuelve los datos de un quizz específico."""
+        try:
+            respuesta = (
+                self.client.table("Quizz")
+                .select("*")
+                .eq("id_quizz", id_quizz)
+                .execute()
+            )
+            # Retorna el primer resultado si existe, o None si no encuentra nada
+            return respuesta.data[0] if respuesta.data else None
+        except Exception as e:
+            print(f"Error al obtener quizz: {e}")
+            return None
+
+    def actualizar_estado_quizz(self, id_quizz: str, estado: bool, completado: bool):
+        """Permite editar el estado del juego (por ejemplo, cerrarlo o marcarlo como terminado)."""
+        try:
+            datos_actualizados = {"estado": estado, "completado": completado}
+            respuesta = (
+                self.client.table("Quizz")
+                .update(datos_actualizados)
+                .eq("id_quizz", id_quizz)
+                .execute()
+            )
+            return respuesta.data
+        except Exception as e:
+            print(f"Error al actualizar quizz: {e}")
+            return None
+
+    def eliminar_quizz(self, id_quizz: str):
+        """Elimina un quizz por completo."""
+        try:
+            respuesta = (
+                self.client.table("Quizz").delete().eq("id_quizz", id_quizz).execute()
+            )
+            return respuesta.data
+        except Exception as e:
+            print(f"Error al eliminar quizz: {e}")
+            return None
+
+    # =========================================================================
+    # SECCIÓN: PREGUNTAS Y OPCIONES (CONSTRUCCIÓN INTEGRAL)
+    # =========================================================================
+
+    def agregar_pregunta_completa(
+        self,
+        id_quizz: str,
+        id_pregunta: str,
+        texto_pregunta: str,
+        id_tipo_pregunta: int,
+        index_pregunta: int,
+        lista_opciones: list,
+    ):
         """
-        Paso 1 de 2. Crea el registro del quiz y devuelve la fila completa
-        (incluye el id/uuid recien generado, necesario para el paso 2
-        y para codificar el QR).
-        """
-        # Preparar los datos del quiz
-        info_obtenida = {
-            "creator_name": creator_name,
-            "title": title,
-        }
+        Inserta una pregunta, sus opciones y amarra todas las relaciones intermedias.
 
-        # agregar el quiz a la tabla quizzes y ejecutar la consultaSQL
-        insert_quizz = self.client.table("quizzes").insert(info_obtenida).execute()
-        return insert_quizz.data[0]
-
-    # ------------------------------------------------------------------
-    # CREADOR: agregar preguntas a un quiz ya creado
-    # ------------------------------------------------------------------
-    def add_preguntas(self, quiz_id: str, questions: list[dict]) -> list[dict]:
-        """
-        Paso 2 de 2. Recibe una lista de preguntas ya con la forma de la
-        tabla, por ejemplo:
-
+        'lista_opciones' debe ser una lista de diccionarios con este formato:
         [
-            {
-                "order_index": 1,
-                "question_text": "¿Cual es mi color favorito?",
-                "options": ["Rojo", "Azul", "Verde"],
-                "correct_answer": "Azul",
-                "points": 10,
-            },
+            {"id_opcion": 101, "texto_opcion": "Azul", "puntaje": 10, "index_opcion": 1},
+            {"id_opcion": 102, "texto_opcion": "Rojo", "puntaje": -5, "index_opcion": 2},
             ...
         ]
-
-        Se les inyecta el quiz_id y se insertan todas en una sola llamada.
         """
-        info_obtenida = []
-        # question es un diccionario, se hace una copia de cada pregunta y se le agrega el quiz_id
-        # el diccionario, asocia los atributos de la tabla "preguntas"(keys), con sus valores(values)
-        # cada pregunta tiene el id del quiz al que pertenece, para poder relacionarlas
-        for q in questions:
-            q_copy = dict(q)
-            q_copy["quiz_id"] = quiz_id
-            info_obtenida.append(q_copy)
+        try:
+            # 1. Insertar la Pregunta base
+            self.client.table("Preguntas").insert(
+                {
+                    "id_pregunta": id_pregunta,
+                    "texto_pregunta": texto_pregunta,
+                    "id_tipo_pregunta": id_tipo_pregunta,
+                }
+            ).execute()
 
-        insert_preguntas = (
-            self.client.table("questions").insert(info_obtenida).execute()
-        )
-        return insert_preguntas.data
+            # 2. Relacionar la Pregunta con el Quizz (Tabla intermedia Quizz/Preguntas)
+            self.client.table("Quizz/Preguntas").insert(
+                {
+                    "id_quizz": id_quizz,
+                    "id_pregunta": id_pregunta,
+                    "index_pregunta": index_pregunta,
+                }
+            ).execute()
 
-    # ------------------------------------------------------------------
-    # JUGADOR: cargar quiz + preguntas para responder
-    # ------------------------------------------------------------------
-    def obtener_quiz_con_preguntas(self, quiz_id: str) -> dict:
+            # 3. Iterar por cada opción que envió el creador
+            for opc in lista_opciones:
+                # 3a. Insertar la Opción con su puntaje juguetón
+                self.client.table("Opciones").insert(
+                    {
+                        "id_opcion": opc["id_opcion"],
+                        "texto_opcion": opc["texto_opcion"],
+                        "puntaje": opc["puntaje"],
+                    }
+                ).execute()
+
+                # 3b. Relacionar la Opción con la Pregunta (Tabla intermedia Preguntas/Opciones)
+                self.client.table("Preguntas/Opciones").insert(
+                    {
+                        "id_pregunta": id_pregunta,
+                        "id_opciones": opc["id_opcion"],
+                        "index_opcion": opc["index_opcion"],
+                    }
+                ).execute()
+
+            print(f"Pregunta {id_pregunta} y sus opciones creadas con éxito.")
+            return True
+
+        except Exception as e:
+            print(f"Error al construir la pregunta completa: {e}")
+            return False
+
+    # =========================================================================
+    # SECCIÓN: JUGADORES, RESPUESTAS Y RANKING
+    # =========================================================================
+
+    def registrar_respuesta_jugador(
+        self,
+        id_quizz: str,
+        id_jugador: str,
+        nombre_jugador: str,
+        lista_respuesta_json: dict,
+    ):
         """
-        Usado por la vista del jugador despues de escanear/tipear el QR.
-        Devuelve un dict con el quiz y su lista de preguntas ordenadas.
+        Registra a un jugador y guarda sus respuestas en formato JSONB.
+        Como es un juego de fiesta sin registro previo, este método crea ambos registros seguidos.
         """
-        # obtener el quizz
-        quiz_response = (
-            self.client.table("quizzes")
-            .select("*")
-            .eq("id", quiz_id)
-            .single()
-            .execute()
-        )
-        # obtener las preguntas del quiz, filtrando por quiz_id y ordenando por order_index
-        questions_response = (
-            self.client.table("questions")
-            .select("*")
-            .eq("quiz_id", quiz_id)  # filtro
-            .order("order_index")  # ordenamiento
-            .execute()
-        )
-        # diccionario {"quiz": "questions"}
-        return {
-            "quiz": quiz_response.data,
-            "questions": questions_response.data,
-        }
+        try:
+            # 1. Crear al jugador en la tabla 'Jugadores'
+            # 'hora_creacion' se puede manejar con el default de la BD o pasando el timestamp actual
+            self.client.table("Jugadores").insert(
+                {
+                    "id_jugador": id_jugador,
+                    "nombre_jugador": nombre_jugador,
+                    "hora_creacion": "now()",  # O un string de timestamp desde Python
+                }
+            ).execute()
 
-    # ------------------------------------------------------------------
-    # JUGADOR: registrarse en el quiz (antes de responder)
-    # ------------------------------------------------------------------
-    def registrar_jugador(self, quiz_id: str, player_name: str) -> dict:
-        info_obtenida = {
-            "quiz_id": quiz_id,
-            "player_name": player_name,
-        }
-        insert_registro = self.client.table("players").insert(info_obtenida).execute()
-        return insert_registro.data[0]
+            # 2. Guardar su mapa de respuestas en la tabla 'Respuestas'
+            # Aquí es donde 'lista_respuesta_json' recibe el diccionario {"id_pregunta": "id_opcion"}
+            self.client.table("Respuestas").insert(
+                {
+                    "id_quizz": id_quizz,
+                    "id_jugador": id_jugador,
+                    "lista_respuesta": lista_respuesta_json,
+                }
+            ).execute()
 
-    # ------------------------------------------------------------------
-    # JUGADOR: enviar resultado ya calculado (el calculo de score
-    # vive en servicios/puntos_s.py, este metodo solo persiste)
-    # ------------------------------------------------------------------
-    def enviar_resultado(
-        self, player_id: str, quiz_id: str, answers: list[dict], score: int
-    ) -> dict:
-        info_enviada = {
-            "player_id": player_id,
-            "quiz_id": quiz_id,
-            "answers": answers,
-            "score": score,
-        }
-        insert_resultado = self.client.table("results").insert(info_enviada).execute()
-        return insert_resultado.data[0]
+            print(f"Respuestas de {nombre_jugador} guardadas con éxito.")
+            return True
+        except Exception as e:
+            print(f"Error al registrar respuestas del jugador: {e}")
+            return False
 
-    # ------------------------------------------------------------------
-    # CREADOR: obtener ranking de un quiz
-    # ------------------------------------------------------------------
-    def obtener_ranking(self, quiz_id: str) -> list[dict]:
+    def obtener_respuestas_para_ranking(self, id_quizz: str):
         """
-        v1: sin Realtime, se llama manualmente (boton "Ver ranking"
-        o polling simple). Devuelve resultados ordenados de mayor a
-        menor score. No trae el nombre del jugador directamente
-        (results no lo tiene), eso se resuelve en la capa de servicio
-        o con un join manual si prefieres mas adelante.
+        Trae todas las respuestas de un Quizz específico.
+        Ideal para que tu App local procese los JSON y calcule el ranking en tiempo real.
         """
-        consulta_ranking = (
-            self.client.table("results")
-            .select("*")
-            .eq("quiz_id", quiz_id)
-            .order("score", desc=True)
-            .execute()
-        )
-        return consulta_ranking.data
+        try:
+            respuesta = (
+                self.client.table("Respuestas")
+                .select("id_jugador, lista_respuesta, hora_envio")
+                .eq("id_quizz", id_quizz)
+                .execute()
+            )
+            return respuesta.data
+        except Exception as e:
+            print(f"Error al obtener respuestas para ranking: {e}")
+            return None
+
+    def eliminar_jugador_travieso(self, id_jugador: str):
+        """
+        El 'botón de pánico' del creador. Elimina al jugador de la base de datos.
+        Gracias al ON DELETE CASCADE, esto borrará automáticamente su fila en la tabla Respuestas.
+        """
+        try:
+            respuesta = (
+                self.client.table("Jugadores")
+                .delete()
+                .eq("id_jugador", id_jugador)
+                .execute()
+            )
+            print(f"Jugador {id_jugador} eliminado por el administrador.")
+            return respuesta.data
+        except Exception as e:
+            print(f"Error al eliminar jugador: {e}")
+            return None
