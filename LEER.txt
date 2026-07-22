@@ -1,0 +1,11 @@
+Aplicación de juego para Android
+
+El usuario, quién descarga la app en su smartphone, podrá crear preguntas sobre si mismo
+con la intención de crear un cuestionario para descubrir cual de sus amigos lo conoce más.
+
+Al crear el cuestionario, lo podrá compartir a través de un código QR con todos los invitados
+a su celebreción. Los invitados, quienes tomarán el rol de jugadores, podrán contestar las preguntas sin 
+necesidad de descarag la app o registrarce en una cuenta.
+
+Una vez contestado el cuestionario, el creaador, obtendrá el puntaje de cada uno de sus 
+amigos ordenados por puntaje. 

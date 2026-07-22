@@ -1,6 +1,8 @@
 import flet as ft
 import uuid
 from servicios.supabase_ser import SupabaseServicio
+import qrcode
+import os
 
 
 def crear_quizz(page: ft.Page):
@@ -9,6 +11,7 @@ def crear_quizz(page: ft.Page):
     input_creador = ft.TextField(label="ID del Creador (Número)", value="1")
     input_evento = ft.TextField(label="ID del Evento (Número)", value="2026")
     text_estado = ft.Text(value="", color=ft.Colors.GREEN)
+    componente_qr = ft.Image(src="", visible=False, width=200, height=200)
 
     def boton_crear_click(e):
         text_estado.value = "Generando Quizz y preguntas de prueba..."
@@ -98,8 +101,36 @@ def crear_quizz(page: ft.Page):
 
             text_estado.value = f"¡Quizz creado con éxito!\nID: {id_nuevo_quizz}\n¡Ya puedes generar tu QR!"
             text_estado.color = ft.Colors.GREEN
+            quizz_listo = True
         else:
             text_estado.value = "Hubo un error al crear el Quizz base."
+            text_estado.color = ft.Colors.RED
+
+        page.update()
+
+        if quizz_listo:
+            # 1. Definimos la URL real apuntando a tu otro mini-proyecto + el ID dinámico
+            url_jugador = f"https://afal-proyectos.github.io/cuanto_me_conoces_web/?id={id_nuevo_quizz}"
+
+            # 2. Generamos el QR con la librería de Python
+            qr = qrcode.QRCode(version=1, box_size=10, border=4)
+            qr.add_data(url_jugador)
+            qr.make(fit=True)
+
+            # 3. Lo guardamos temporalmente como imagen en tu computadora
+            ruta_qr = os.path.join(os.path.dirname(__file__), "qr_actual.png")
+            img_qr = qr.make_image(fill_color="black", back_color="white")
+            img_qr.save(ruta_qr)
+
+            # 4. Le decimos a Flet que cargue esa imagen y la haga visible
+            componente_qr.src = ruta_qr
+            componente_qr.visible = True
+
+            text_estado.value = f"¡Quizz creado con éxito!\nID: {id_nuevo_quizz}"
+            text_estado.color = ft.Colors.GREEN
+
+        else:
+            text_estado.value = "Error al crear el Quizz."
             text_estado.color = ft.Colors.RED
 
         page.update()
@@ -123,6 +154,7 @@ def crear_quizz(page: ft.Page):
                             "Crear Quizz y Cargar Preguntas", on_click=boton_crear_click
                         ),
                         text_estado,
+                        componente_qr,
                     ],
                     spacing=20,
                 ),

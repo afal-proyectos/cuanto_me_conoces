@@ -60,7 +60,7 @@
     │   │   ├── sync_s.py		
     │   │   └── ranking_s.py			
     │   │
-    │   ├── repository\
+    │   ├── repositorio\
     │   │   ├── __init__
     │   │   └── esquemaSQL.py
     │   │

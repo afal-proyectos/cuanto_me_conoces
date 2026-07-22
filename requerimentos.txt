@@ -1,12 +1,14 @@
-python-dotenvfre
+->python-dotenvfre
 
 ->Base de datos:
 supabase
 
-
 ->Interdaz de Usuario:
 Flet: 0.86.0
 Flutter: 3.44.4
+
+->Código qrcode
+pillow-12.3.0
 
 ->pip freeze:
 annotated-types==0.7.0
