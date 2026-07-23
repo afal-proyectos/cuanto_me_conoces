@@ -34,34 +34,34 @@ def crear_quizz(page: ft.Page):
             id_p1 = str(uuid.uuid4())
             opciones_p1 = [
                 {
-                    "id_opcion": 11,
-                    "texto_opcion": "Python",
-                    "puntaje": 10,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Todas las Carnes",
+                    "puntaje": 0,
                     "index_opcion": 1,
                 },
                 {
-                    "id_opcion": 12,
-                    "texto_opcion": "SQL",
-                    "puntaje": 5,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "No me gustan la pizza",
+                    "puntaje": -2,
                     "index_opcion": 2,
                 },
                 {
-                    "id_opcion": 13,
-                    "texto_opcion": "Flet",
-                    "puntaje": 8,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Me gustan todas",
+                    "puntaje": 2,
                     "index_opcion": 3,
                 },
                 {
-                    "id_opcion": 14,
-                    "texto_opcion": "Java",
-                    "puntaje": -5,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Pepperoni",
+                    "puntaje": 4,
                     "index_opcion": 4,
                 },
             ]
             supabase.agregar_pregunta_completa(
                 id_nuevo_quizz,
                 id_p1,
-                "¿Cuál es tu lenguaje favorito?",
+                "¿Cuál es mi pizza favorita?",
                 1,
                 1,
                 opciones_p1,
@@ -71,34 +71,69 @@ def crear_quizz(page: ft.Page):
             id_p2 = str(uuid.uuid4())
             opciones_p2 = [
                 {
-                    "id_opcion": 21,
-                    "texto_opcion": "Mucho",
-                    "puntaje": 10,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Gata loca",
+                    "puntaje": 0,
                     "index_opcion": 1,
                 },
                 {
-                    "id_opcion": 22,
-                    "texto_opcion": "Poco",
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Gusano Pincel",
                     "puntaje": 2,
                     "index_opcion": 2,
                 },
                 {
-                    "id_opcion": 23,
-                    "texto_opcion": "Nada",
-                    "puntaje": 0,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Agente del Caos",
+                    "puntaje": 2,
                     "index_opcion": 3,
                 },
                 {
-                    "id_opcion": 24,
-                    "texto_opcion": "Me rindo",
-                    "puntaje": -10,
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Alma",
+                    "puntaje": 4,
                     "index_opcion": 4,
                 },
             ]
             supabase.agregar_pregunta_completa(
-                id_nuevo_quizz, id_p2, "¿Cuánto te gusta programar?", 1, 2, opciones_p2
+                id_nuevo_quizz, id_p2, "¿Cómo se llama mi gato?", 1, 2, opciones_p2
             )
-
+            # ---------------------------------------------------------------------
+            id_p3 = str(uuid.uuid4())
+            opciones_p2 = [
+                {
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Trasero Loco",
+                    "puntaje": 2,
+                    "index_opcion": 1,
+                },
+                {
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Javi",
+                    "puntaje": -2,
+                    "index_opcion": 2,
+                },
+                {
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "Popita",
+                    "puntaje": 0,
+                    "index_opcion": 3,
+                },
+                {
+                    "id_opcion": str(uuid.uuid4()),
+                    "texto_opcion": "ChikiPopi",
+                    "puntaje": 4,
+                    "index_opcion": 4,
+                },
+            ]
+            supabase.agregar_pregunta_completa(
+                id_nuevo_quizz,
+                id_p3,
+                "¿Cómo me gusta llamar a mi hija?",
+                1,
+                2,
+                opciones_p2,
+            )
             text_estado.value = f"¡Quizz creado con éxito!\nID: {id_nuevo_quizz}\n¡Ya puedes generar tu QR!"
             text_estado.color = ft.Colors.GREEN
             quizz_listo = True

@@ -2,7 +2,7 @@ CREATE TABLE "Quizz"(
     "id_quizz" UUID NOT NULL,
     "id_creador" INTEGER NOT NULL,
     "id_evento" INTEGER NOT NULL,
-    "hora_creacion" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "hora_creacion" TIMESTAMPTZ WITHOUT TIME ZONE NOT NULL,
     "estado" BOOLEAN NOT NULL DEFAULT TRUE,
     "completado" BOOLEAN NOT NULL DEFAULT FALSE,
     "total_preguntas" INTEGER NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE "Preguntas"(
     CONSTRAINT "pk_preguntas" PRIMARY KEY("id_pregunta")
 );
 
-CREATE TABLE "Quizz/Preguntas"(
+CREATE TABLE "Quizz_Preguntas"(
     "id_quizz" UUID NOT NULL,
     "id_pregunta" UUID NOT NULL,
     "index_pregunta" INTEGER NOT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE "Quizz/Preguntas"(
 
 CREATE TABLE "Jugadores"(
     "id_jugador" UUID NOT NULL,
-    "nombre_jugador" VARCHAR(255) NOT NULL,
-    "hora_creacion" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "nombre_jugador" TEXT NOT NULL,
+    "hora_creacion" TIMESTAMPTZ WITHOUT TIME ZONE NOT NULL,
 
     CONSTRAINT "pk_jugadores" PRIMARY KEY("id_jugador")
 );
@@ -42,8 +42,7 @@ CREATE TABLE "Jugadores"(
 CREATE TABLE "Respuestas"(
     "id_quizz" UUID NOT NULL,
     "id_jugador" UUID NOT NULL,
-    "hora_envio" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
-    "completada" BOOLEAN NOT NULL DEFAULT FALSE,
+    "hora_envio" TIMESTAMPTZ WITHOUT TIME ZONE NOT NULL,
     "lista_respuesta" jsonb NOT NULL,
 
     CONSTRAINT "pk_respuestas" PRIMARY KEY("id_quizz", "id_jugador"),
@@ -54,16 +53,16 @@ CREATE TABLE "Respuestas"(
 );
 
 CREATE TABLE "Opciones"(
-    "id_opcion" INTEGER NOT NULL,
+    "id_opcion" UUID NOT NULL,
     "texto_opcion" TEXT NOT NULL,
     "puntaje" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "pk_opciones" PRIMARY KEY("id_opcion")
 );
 
-CREATE TABLE "Preguntas/Opciones"(
+CREATE TABLE "Preguntas_Opciones"(
     "id_pregunta" UUID NOT NULL,
-    "id_opciones" INTEGER NOT NULL,
+    "id_opcion" UUID NOT NULL,
     "index_opcion" INTEGER NOT NULL,
 
     CONSTRAINT "pk_preguntas_opciones" PRIMARY KEY("id_pregunta", "id_opciones"),
@@ -73,6 +72,9 @@ CREATE TABLE "Preguntas/Opciones"(
         REFERENCES "Opciones"("id_opcion")  
 );
 
+
+
+--------las porlitixas están desactivadas en esta etapa de prueba-----------------
 ALTER TABLE "Quizz" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY modificar_quizz ON "Quizz" 

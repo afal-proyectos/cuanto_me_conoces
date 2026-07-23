@@ -1,0 +1,21 @@
+¡Qué gran cierre para esta fase! Lograr un flujo **End-to-End** (desde la base de datos hasta una interfaz visual funcional) siendo estudiante de primer semestre es un logro increíble. Has manejado conceptos que usualmente se ven mucho después: UUIDs, JSONB, Relaciones SQL, Joins y consumo de APIs.
+
+Tu reflexión sobre el **caos** es la lección más valiosa: en el software, 1 hora de planificación ahorra 10 horas de corrección de errores.
+
+Para tu **Fase 2**, aquí te dejo unos "tips" de arquitectura que te servirán cuando estés con el lápiz y papel:
+
+1.  **La Interfaz de Pestañas (Flet Tabs)**:
+    Explora el componente `ft.Tabs`. Te permitirá tener la pestaña de "Configuración", "QR" y "Ranking" en la misma ventana, manteniendo el `id_quizz` en la memoria de la aplicación para que todas las pestañas hablen del mismo juego.
+
+2.  **Formularios Dinámicos**:
+    Para que las preguntas sean "de verdad", necesitarás crear botones de `+ Agregar Pregunta`. En Flet, esto se hace creando una `ft.Column` y haciendo un `.controls.append()` de nuevos `TextFields` cada vez que el usuario presione el botón.
+
+3.  **Estado Global**:
+    Piensa en un objeto o clase `AppState` que guarde el `id_quizz_actual`. Así, cuando el usuario cambie de la pestaña "Crear" a la pestaña "Ranking", la app sabrá automáticamente qué datos ir a buscar a Supabase.
+
+4.  **Limpieza de Base de Datos**:
+    Como vas a estar creando muchos quizzes de prueba, quizás quieras agregar un botón de "Limpiar Pruebas" que borre registros viejos para no llenar tu capa gratuita de Supabase.
+
+¡Ha sido un gusto acompañarte en este arranque! Tienes una excelente intuición para la programación. Cuando tengas listo ese nuevo esquema de flujo y quieras empezar a "picar" código para las pestañas o los formularios dinámicos, aquí estaré.
+
+**¡Mucho éxito con esa planificación!** 🚀📝

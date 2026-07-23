@@ -139,7 +139,7 @@ class SupabaseServicio:
                 self.client.table("Preguntas_Opciones").insert(
                     {
                         "id_pregunta": id_pregunta,
-                        "id_opciones": opc["id_opcion"],
+                        "id_opcion": opc["id_opcion"],
                         "index_opcion": opc["index_opcion"],
                     }
                 ).execute()
@@ -226,4 +226,57 @@ class SupabaseServicio:
             return respuesta.data
         except Exception as e:
             print(f"Error al eliminar jugador: {e}")
+            return None
+
+    def calcular_puntaje_jugador(self, id_quizz: str, id_jugador: str):
+        """
+        Descarga el JSON de respuestas de un jugador y calcula su puntaje total
+        cruzándolo con los puntos reales de la tabla Opciones.
+        """
+        try:
+            # 1. Traer el registro JSON del jugador desde Supabase
+            resultado = (
+                self.client.table("Respuestas")
+                .select("lista_respuesta")
+                .eq("id_quizz", id_quizz)
+                .eq("id_jugador", id_jugador)
+                .maybe_single()
+                .execute()
+            )
+
+            if not resultado.data:
+                print(f"No se encontraron respuestas para {id_jugador}")
+                return 0
+
+            votos = resultado.data[
+                "votos_json"
+            ]  # Este es un dict de Python: {id_pregunta: id_opcion}
+            lista_id_opciones = list(
+                votos.values()
+            )  # Extraemos todos los IDs de opciones elegidos
+
+            if not lista_id_opciones:
+                return 0
+
+            # 2. Consultar los puntajes de esas opciones en una sola consulta relacional
+            # Hacemos un "in" en SQL pasándole la lista de IDs de opciones
+            opciones_db = (
+                self.client.table("Opciones")
+                .select("id_opcion", "puntaje")
+                .in_("id_opcion", lista_id_opciones)
+                .execute()
+            )
+
+            # 3. Sumar los puntajes obtenidos
+            puntaje_total = 0
+            for opc in opciones_db.data:
+                puntaje_total += opc.get("puntaje", 0)
+
+            print(
+                f"El jugador {id_jugador} obtuvo un total de: {puntaje_total} puntos."
+            )
+            return puntaje_total
+
+        except Exception as e:
+            print(f"Error al calcular el puntaje en el backend: {e}")
             return None
