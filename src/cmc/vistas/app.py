@@ -81,9 +81,9 @@ class App:
         self._elegir_view(self.editor_view)
 
     # ir a p4 : necesitamos más información en los parametros
-    def _abrir_editor_opciones(self, question_id):
+    def _abrir_editor_opciones(self, pregunta):
         dialog = CrearOpciones(
-            question_text=f"Pregunta {question_id}",
+            question_text=f"Pregunta {pregunta}",
             on_save=self._save_question,
             on_cancel=lambda: self.page.pop_dialog(),
         )

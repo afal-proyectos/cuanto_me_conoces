@@ -1,4 +1,5 @@
 import flet as ft
+from textos.txt import TextosApp as tx
 
 
 class InicioView(ft.View):
@@ -20,7 +21,7 @@ class InicioView(ft.View):
         # =====================
 
         self.ibl_titulo = ft.Text(
-            "¿Cuánto Me Conoces?",
+            tx.Vista1.nombre_app,
             margin=100,
             size=50,
             weight=ft.FontWeight.BOLD,

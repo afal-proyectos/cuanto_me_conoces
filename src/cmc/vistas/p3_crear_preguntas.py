@@ -1,4 +1,5 @@
 import flet as ft
+from textos.txt import TextosApp as tx
 
 
 class CrearPreguntas(ft.View):
@@ -26,10 +27,22 @@ class CrearPreguntas(ft.View):
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         controls=[
                             self.lbl_title,
-                            self.cmb_question_type,
-                            self.opciones,
+                            ft.Row(
+                                height=100,
+                                controls=[
+                                    self.opciones,
+                                    self.verdad_mentira,
+                                ],
+                            ),
+                            ft.Row(
+                                height=100,
+                                controls=[
+                                    self.ranking_10,
+                                    self.trio,
+                                ],
+                            ),
                             ft.Divider(),
-                            self.lst_questions,
+                            self.lista_preguntas,
                             ft.Divider(),
                             self.btn_finish,
                             self.btn_back,
@@ -47,49 +60,52 @@ class CrearPreguntas(ft.View):
             weight=ft.FontWeight.BOLD,
         )
 
-        self.cmb_question_type = ft.Dropdown(
-            width=300,
-            label="Tipo de pregunta",
-            value="multiple",
-            options=[
-                ft.dropdown.Option(
-                    key="SM",
-                    text="Selección múltiple",
-                ),
-                ft.dropdown.Option(
-                    key="VoF",
-                    text="Verdadero o Falso",
-                ),
-                ft.dropdown.Option(
-                    key="L3",
-                    text="Lista de 10",
-                ),
-            ],
-        )
-
-        self.lst_questions = ft.ListView(
+        self.lista_preguntas = ft.Column(
             expand=True,
             spacing=5,
-            auto_scroll=False,
+            scroll=ft.ScrollMode.AUTO,
         )
 
-        self.opciones = ft.Card(
-            shadow_color=ft.Colors.ON_SURFACE_VARIANT,
-            content=ft.Container(
-                width=400,
-                padding=10,
-                content=ft.Column(
-                    controls=[
-                        ft.ListTile(
-                            bgcolor=ft.Colors.GREY_400,
-                            leading=ft.Icon(ft.Icons.ALBUM),
-                            title=ft.Text("Javiera"),
-                        )
-                    ]
-                ),
+        self.opciones = ft.Button(
+            "Seleccion Multiple",
+            expand=True,
+            height=100,
+            bgcolor=ft.Colors.RED,
+            style=ft.ButtonStyle(
+                color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
             ),
+            on_click=lambda e: self.cambiar_lista("btn_1"),
         )
-
+        self.verdad_mentira = ft.Button(
+            "Verdad o Mentira",
+            expand=True,
+            height=100,
+            bgcolor=ft.Colors.GREEN,
+            style=ft.ButtonStyle(
+                color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
+            ),
+            on_click=lambda e: self.cambiar_lista("btn_2"),
+        )
+        self.ranking_10 = ft.Button(
+            "Del 1 al 10",
+            expand=True,
+            height=100,
+            bgcolor=ft.Colors.BLUE,
+            style=ft.ButtonStyle(
+                color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
+            ),
+            on_click=lambda e: self.cambiar_lista("btn_3"),
+        )
+        self.trio = ft.Button(
+            "Encuentra el trio",
+            expand=True,
+            height=100,
+            bgcolor="#ffc800",
+            style=ft.ButtonStyle(
+                color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
+            ),
+            on_click=lambda e: self.cambiar_lista("btn_4"),
+        )
         self.btn_finish = ft.Button(
             "Terminar Quiz",
             on_click=self._on_finish_click,
@@ -100,23 +116,24 @@ class CrearPreguntas(ft.View):
             on_click=self._on_back_click,
         )
 
-    def add_question(self, question_id, text):
-        self.lst_questions.controls.append(
+    def cambiar_lista(self, clave_boton):
+        alternativas = tx.Vista3.opciones.get(clave_boton, [])
+        self.lista_preguntas.controls = [
             ft.ListTile(
                 title=ft.Text(text),
-                on_click=lambda e: self._on_question_click(question_id),
+                on_click=lambda e, t=text: self._on_question_click(t),
             )
-        )
-        self.update()
+            for text in alternativas
+        ]
+        self.lista_preguntas.update()
 
-    def clear_questions(self):
-        self.lst_questions.controls.clear()
-        self.update()
-
-    def _on_question_click(self, question_id):
-
+    # def clear_questions(self):
+    #    self.lst_questions.controls.clear()
+    #    self.update()
+    def _on_question_click(self, pregunta):
         if self.on_question_selected:
-            self.on_question_selected(question_id)
+            self.on_question_selected(pregunta)
+            print(f"Seleccionado:{pregunta}")
 
     def _on_finish_click(self, e):
         if self.on_finish:
