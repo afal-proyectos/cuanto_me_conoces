@@ -1,0 +1,117 @@
+Guía de interfaz de usuario Flet
+
+Pantalla del 1,2,3 y 5 --> View
+pantalla 4 y 6 ----------> AlertDialog
+
+*pantalla 5 ----->usar ExpansionTile
+Arquitectura:
+
+ui/
+	app.py				#encargado de cambiar pantallas
+	
+	views/
+		inicio.py
+		datos_quizz.py
+		selección_pregunta.py
+		editor_quizz.py
+	dialogs/
+		editar_pregunta.py
+		confirmar_envio.py
+	components/			#todo lo reutilizable 
+		botones.py
+		cards.py
+		lista_pregunta.py
+
+page.clean() y page.add() ----> page.go() y page.views()
+
+Cada pantalla debe ser una clase.
+
+La vista no navega.
+	-No llama a page.go().
+	-No modifica ninguna variable.
+	-No consulta Supabase.
+	-No crea objetos.
+	-No sabe nada.
+	-Solo dice:
+		"Alguien ha pulsado este botón."
+	-Y se acabó.
+
+| Regla                                                        | Motivo                                        |
+| ------------------------------------------------------------ | --------------------------------------------- |
+| Una pantalla = una clase                                     | Facilita el mantenimiento.                    |
+| La UI nunca accede a la base de datos                        | Separación de responsabilidades.              |
+| La UI solo emite eventos                                     | La lógica decide qué hacer.                   |
+| Los controles importantes son atributos (`self.btn_guardar`) | Permite modificarlos más adelante.            |
+| Los componentes reutilizables viven en `components/`         | Evita duplicar código.                        |
+| Las ventanas flotantes son `AlertDialog`                     | Es el patrón natural en Flet.                 |
+| La navegación nunca se hace desde un botón                   | La vista no conoce el flujo de la aplicación. |
+
+
+# Guía de desarrollo de la Interfaz de Usuario
+
+## Filosofía
+
+La interfaz de usuario es una capa completamente independiente de la lógica de negocio.
+
+Su única responsabilidad es:
+
+- Mostrar información.
+- Recibir acciones del usuario.
+- Emitir eventos.
+
+Nunca debe:
+
+- Acceder a la base de datos.
+- Ejecutar reglas de negocio.
+- Tomar decisiones sobre el flujo de datos.
+
+Las vistas nunca crean datos
+	-No sabe qué es un Quiz.
+	-No sabe qué es Supabase.
+	-No sabe qué es un modelo.
+	-Solo entrega datos.
+
+| Prefijo | Ejemplo             |
+| ------- | ------------------- |
+| `txt_`  | `txt_nombre_evento` |
+| `btn_`  | `btn_guardar`       |
+| `lbl_`  | `lbl_contador`      |
+| `lst_`  | `lst_preguntas`     |
+| `dlg_`  | `dlg_confirmacion`  |
+| `cmb_`  | `cmb_tipo_pregunta` |
+
+
+Las vistas no conocen otras vistas
+La navegación la decidirá una clase central (más adelante será nuestro App o un pequeño Navigator).
+Así cada vista vive completamente aislada.
+
+A partir de ahora, cuando escribamos código, intentaremos que cumpla esta pregunta:
+
+"¿Podría probar esta pantalla sin tener el resto del proyecto?"
+
+Si la respuesta es sí, vamos bien.
+
+Eso significa que:
+
+no depende de la base de datos;
+no depende de Supabase;
+no depende del CRUD;
+no depende de otras pantallas.
+
+Solo depende de Flet.
+
+Ese nivel de independencia hace que el desarrollo y las pruebas sean mucho más rápidos.
+
+
+InicioView
+│
+├── Atributos (controles)
+│
+├── Construcción de la interfaz
+│
+└── Eventos
+
+
+La interfaz de usuario no existe para pensar; existe para comunicar.
+
+La lógica de negocio toma decisiones. La interfaz únicamente representa el estado de la aplicación y comunica las acciones del usuario mediante eventos.

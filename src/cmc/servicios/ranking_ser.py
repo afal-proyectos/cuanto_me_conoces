@@ -110,7 +110,7 @@ class RankingServicio:
             elif puesto == 3:
                 icono = "🥉"
             else:
-                icono, color = f"  {puesto}. ", ft.Colors.WHITE
+                icono = f"  {puesto}. "
 
             filas.append(
                 ft.Container(
