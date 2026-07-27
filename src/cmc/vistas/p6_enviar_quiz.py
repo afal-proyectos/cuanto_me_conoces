@@ -4,7 +4,7 @@ import flet as ft
 class Enviar(ft.AlertDialog):
     def __init__(
         self,
-        question_text="Enviar Quizz",
+        question_text="",
         on_save=None,
         on_cancel=None,
     ):
@@ -26,16 +26,16 @@ class Enviar(ft.AlertDialog):
 
     def _create_controls(self):
 
-        self.advertencia = ft.Text("Estás Seguro?")
+        self.advertencia = ft.Text("¿Estás Seguro de enviar el quizz?")
 
         self.btn_save = ft.Button(
-            "Guardar",
+            "Enviar",
             expand=True,
             on_click=self._on_save_click,
         )
 
         self.btn_cancel = ft.Button(
-            "Cancelar",
+            "Seguir Editando",
             expand=True,
             on_click=self._on_cancel_click,
         )
@@ -74,7 +74,7 @@ class Enviar(ft.AlertDialog):
 if __name__ == "__main__":
 
     def main(page: ft.Page):
-        page.title = "Prueba de CrearOpciones"
+        page.title = "Prueba Enviar"
         page.theme_mode = ft.ThemeMode.LIGHT
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -84,12 +84,12 @@ if __name__ == "__main__":
             page.update()
 
         def guardar_datos(**kwargs):
-            print(f"Datos guardados: {kwargs}")
+            print(f"Enviar: {kwargs}")
             cerrar_dialogo()
 
         # Instanciamos el diálogo
         dlg = Enviar(
-            question_text="¿Cuál es tu lenguaje favorito?",
+            question_text="¡Atención!",
             on_save=guardar_datos,
             on_cancel=cerrar_dialogo,
         )

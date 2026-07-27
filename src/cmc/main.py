@@ -1,5 +1,7 @@
 import flet as ft
-from vistas.crear_quizz_flet import crear_quizz
+
+# from vistas.crear_quizz_flet import crear_quizz
+from vistas.app import App
 
 
 def main(page: ft.Page):
@@ -11,11 +13,12 @@ def main(page: ft.Page):
     page.window_resizable = False
 
     # Obtenemos la vista que creamos
-    instancia_vista = crear_quizz(page)
+    # instancia_vista =
+    App(page)
 
     # Agregamos los controles de esa vista a la página principal
-    page.add(*instancia_vista.controls)
+    # page.add(*instancia_vista.controls)
 
 
 if __name__ == "__main__":
-    ft.app(main)
+    ft.run(main)

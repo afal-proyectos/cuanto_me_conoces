@@ -1,9 +1,5 @@
 import flet as ft
 
-# from src.cmc.vistas_com.btn_regreso import BotonRegreso
-# from src.cmc.vistas_com.pregunta_item import PreguntaItem
-from p4_crear_opciones import CrearOpciones
-
 
 class CrearPreguntas(ft.View):
     def __init__(

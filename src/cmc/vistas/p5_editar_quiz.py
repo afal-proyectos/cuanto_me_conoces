@@ -59,19 +59,19 @@ class QuizQuestionTile(ft.ExpansionTile):
 # ==========================================================
 
 
-class QuizEditorView(ft.View):
+class QuizEditor(ft.View):
     def __init__(
         self,
         on_edit_question=None,
         on_delete_question=None,
-        on_send_quiz=None,
+        on_enviar_quiz=None,
         on_back=None,
     ):
         super().__init__(route="/editor")
 
         self.on_edit_question = on_edit_question
         self.on_delete_question = on_delete_question
-        self.on_send_quiz = on_send_quiz
+        self.on_send_quiz = on_enviar_quiz
         self.on_back = on_back
 
         self._create_controls()
@@ -190,10 +190,10 @@ if __name__ == "__main__":
 
         page.title = "Quiz Editor"
 
-        view = QuizEditorView(
+        view = QuizEditor(
             on_edit_question=lambda q: print(f"Editar {q}"),
             on_delete_question=lambda q: print(f"Eliminar {q}"),
-            on_send_quiz=lambda: print("Enviar Quiz"),
+            on_enviar_quiz=lambda: print("Enviar Quiz"),
             on_back=lambda: print("Volver"),
         )
 
