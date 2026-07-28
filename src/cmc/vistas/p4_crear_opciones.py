@@ -4,7 +4,7 @@ import flet as ft
 class CrearOpciones(ft.AlertDialog):
     def __init__(
         self,
-        question_text="Pregunta",
+        question_text=None,
         on_save=None,
         on_cancel=None,
     ):
@@ -78,7 +78,7 @@ class CrearOpciones(ft.AlertDialog):
 
         return ft.Column(
             tight=True,
-            width=400,
+            expand=True,
             controls=[
                 ft.Row(controls=[self.txt_option1, self.score1]),
                 ft.Row(controls=[self.txt_option2, self.score2]),
@@ -137,6 +137,7 @@ class CrearOpciones(ft.AlertDialog):
 
         if self.on_save:
             self.on_save(
+                pregunta=self.title.value,
                 option1=self.txt_option1.value,
                 option2=self.txt_option2.value,
                 option3=self.txt_option3.value,

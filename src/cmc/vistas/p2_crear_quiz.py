@@ -13,23 +13,29 @@ class DatosQuizView(ft.View):
 
         # Controles
         self.lbl_titulo = ft.Container(
-            content=ft.Text("Datos del Quizz", size=30, weight=ft.FontWeight.BOLD),
-            margin=ft.Margin.only(bottom=50),
-            padding=50,
+            content=ft.Text("Crear Nuevo", size=30, weight=ft.FontWeight.BOLD),
+            margin=ft.Margin.only(bottom=5),
+            padding=5,
+            expand=True,
         )
 
         self.txt_nombre = ft.TextField(
-            label="Nombre del creador", width=320, on_change=self._validar_campos
+            label="Ingresa tu nombre", width=320, on_change=self._validar_campos
         )
 
         self.txt_evento = ft.TextField(
-            label="Nombre del evento", width=320, on_change=self._validar_campos
+            label="Nombre del evento donde jugarás",
+            width=320,
+            on_change=self._validar_campos,
         )
-
+        self.txt_comentario = ft.TextField(
+            label="Breve comentario de este Quiz", width=320
+        )
         self.cmb_cantidad = ft.Dropdown(
             label="Cantidad de preguntas",
             width=320,
             value="5",
+            expand=True,
             options=[
                 ft.dropdown.Option("5"),
                 ft.dropdown.Option("7"),
@@ -63,9 +69,14 @@ class DatosQuizView(ft.View):
                             self.lbl_titulo,
                             self.txt_nombre,
                             self.txt_evento,
+                            self.txt_comentario,
                             self.cmb_cantidad,
-                            self.btn_continuar,
-                            self.btn_volver,
+                            ft.Row(
+                                controls=[
+                                    self.btn_continuar,
+                                    self.btn_volver,
+                                ]
+                            ),
                         ],
                     ),
                 )
@@ -89,6 +100,7 @@ class DatosQuizView(ft.View):
             self.on_continuar(
                 nombre_creador=self.txt_nombre.value,
                 nombre_evento=self.txt_evento.value,
+                comentario=self.txt_comentario.value,
                 cantidad_preguntas=int(self.cmb_cantidad.value),
             )
 

@@ -1,13 +1,15 @@
 import flet as ft
 
 from vistas.p1_inicio_flet import InicioView
-from vistas.p2_craer_quiz import DatosQuizView
+from vistas.p2_crear_quiz import DatosQuizView
 from vistas.p3_crear_preguntas import CrearPreguntas
 from vistas.p5_editar_quiz import QuizEditor
 
 from vistas.p4_crear_opciones import CrearOpciones
 from vistas.p6_enviar_quiz import Enviar
+
 # from textos.txt import TextosVistas as tx
+from models.quiz_model import QuizM
 
 
 class App:
@@ -74,6 +76,11 @@ class App:
 
     # ir a p3
     def _crear_preguntas(self, *args, **kwargs):
+        self.datos_creacion_quiz = kwargs
+        q = QuizM()
+        datos_entrada = list(self.datos_creacion_quiz.values())
+        print(f"datos para crear quiz -->{datos_entrada}")
+        q.crear(datos=datos_entrada)
         self._elegir_view(self.crear_preguntas_view)
 
     # ir a p5
@@ -94,7 +101,7 @@ class App:
         self,
     ):
         dialog = Enviar(
-            question_text="¡Atención!",
+            advertencia="¡Atención!",
             on_save=self._crear_quiz,
             on_cancel=lambda: self.page.pop_dialog(),
         )
@@ -111,9 +118,11 @@ class App:
 
     # guardar en p4
     def _save_question(self, **data):
-        print("Guardar pregunta")
-        print(data)
+        # print(f"Guardar pregunta: {pregunta}")
+        print(f"opciones{data}")
         self.page.pop_dialog()
+
+        # agregar función para guardar las preguntas
 
     # abrir la p4, pero con los datos correspondientes
     def _edit_question(self, question_id):

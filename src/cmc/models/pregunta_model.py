@@ -1,0 +1,2 @@
+class PreguntasM:
+    pass
