@@ -16,6 +16,9 @@ class BDLocal:
         self.id = id_quiz_actual
         self.quiz = quiz_actual
 
+        # Agregar el parametro de "editable". Por defecto False. Solo un quiz es editable a la vez
+        self.quiz["editable"] = False
+
         quiz_local = {}
 
         if os.path.exists(self.local):
@@ -34,7 +37,6 @@ class BDLocal:
         try:
             with open(self.local, "w", encoding="utf-8") as archivo:
                 json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
-
         except FileNotFoundError as e:
             print(f"Error al guardar el Quiz: {e}")
 
@@ -42,10 +44,43 @@ class BDLocal:
         try:
             with open(self.local, "r", encoding="utf-8") as archivo:
                 quiz_local = json.load(archivo)
-
         except FileNotFoundError:
             print("No hay datos guardados")
         return quiz_local
+
+    def habilitar_quiz(self, id):
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                quiz_local = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay datos guardados")
+
+        quiz_habilitado = quiz_local[id]
+        quiz_habilitado["editable"] = True
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al guardar el Quiz: {e}")
+        print(f"Quiz {id} -->habilitado")
+
+    def deshabilitar_quiz(self, id):
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                quiz_local = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay datos guardados")
+
+        quiz_habilitado = quiz_local[id]
+        quiz_habilitado["editable"] = False
+
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al guardar el Quiz: {e}")
+
+        print(f"Quiz {id} deshabilitado")
 
 
 if __name__ == "__main__":

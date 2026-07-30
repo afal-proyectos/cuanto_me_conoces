@@ -1,50 +1,9 @@
 {
-    "772b60ce-6c10-470a-b998-a70dc9746992": {
-        "nombre_creador": "Alejandro",
-        "nombre_evento": "Cumpleaños",
-        "comentario": "Prueba",
-        "cantidad_preguntas": 5
-    },
-    "771b60ce-6c10-470a-b998-a70dc9746992": {
-        "nombre_creador": "Alejandro",
-        "nombre_evento": "Cumpleaños",
-        "comentario": "Prueba",
-        "cantidad_preguntas": 5
-    },
-    "63f2c8f8-129d-418a-8423-84525762bec2": {
-        "nombre_creador": "ale",
-        "nombre_evento": "jaja",
-        "comentario": "otra prueba",
-        "cantidad_preguntas": 5
-    },
-    "52aede0a-7907-4381-a8bd-a40a2fb7ac63": {
-        "nombre_creador": "Valeska",
-        "nombre_evento": "Aniversario",
-        "comentario": "Prueba uno",
-        "cantidad_preguntas": 5
-    },
-    "9202fcdb-987c-4b02-a750-88c908c8363a": {
-        "nombre_creador": "Alma",
-        "nombre_evento": "comida",
-        "comentario": "agente del caos",
-        "cantidad_preguntas": 5
-    },
-    "83b98048-06ec-4833-a0ff-cc9a1765168f": {
-        "nombre_creador": "Alejandro",
-        "nombre_evento": "Cumpleaños",
-        "comentario": "Hola",
-        "cantidad_preguntas": 5
-    },
-    "0c78be5c-6ffb-4013-9120-ba22ac1bc565": {
-        "nombre_creador": "Valeska",
-        "nombre_evento": "Aniversario",
-        "comentario": "Los quiero",
-        "cantidad_preguntas": 10
-    },
-    "468be0aa-9633-4556-bc54-3dd3ee35fd7b": {
-        "nombre_creador": "javi",
-        "nombre_evento": "cumpleaños",
-        "comentario": "Hola",
-        "cantidad_preguntas": 7
+    "0938217f-ec9d-42ad-a4a5-f732296a585e": {
+        "nombre_creador": "cami",
+        "nombre_evento": "otra vez",
+        "comentario": "sipo",
+        "cantidad_preguntas": 5,
+        "editable": false
     }
 }

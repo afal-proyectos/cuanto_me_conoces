@@ -84,7 +84,7 @@ class InicioView(ft.View):
     # Eventos privados:
     def _on_nuevo_quiz_click(self, e):
         if self.on_nuevo_quiz:
-            self.on_nuevo_quiz()
+            self.on_nuevo_quiz(e)
 
     def _on_seguir_editando_click(self, e):
         if self.on_seguir_editando:

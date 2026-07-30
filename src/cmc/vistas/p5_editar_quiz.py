@@ -1,11 +1,6 @@
 import flet as ft
 
 
-# ==========================================================
-# Componente
-# ==========================================================
-
-
 class QuizQuestionTile(ft.ExpansionTile):
     def __init__(
         self,
@@ -139,7 +134,7 @@ class QuizEditor(ft.View):
         options,
         score,
     ):
-        tile = QuizQuestionTile(
+        self.tile = QuizQuestionTile(
             question_id=question_id,
             question=question,
             options=options,
@@ -147,8 +142,8 @@ class QuizEditor(ft.View):
             on_edit=self.on_edit_question,
             on_delete=self.on_delete_question,
         )
-
-        self.lst_questions.controls.append(tile)
+        self.btn_back.data = question_id  # agrego a data, del botón volver, el id del quiz para deshabilarlo
+        self.lst_questions.controls.append(self.tile)
         self.update_counter()
         self.update()
 
@@ -177,7 +172,7 @@ class QuizEditor(ft.View):
 
     def _back_click(self, e):
         if self.on_back:
-            self.on_back()
+            self.on_back(e)
 
 
 # ==========================================================

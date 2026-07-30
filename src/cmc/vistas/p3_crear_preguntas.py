@@ -7,12 +7,12 @@ class CrearPreguntas(ft.View):
         self,
         on_question_selected=None,
         on_finish=None,
-        on_back=None,
+        # on_back=None,
     ):
 
         self.on_question_selected = on_question_selected
         self.on_finish = on_finish
-        self.on_back = on_back
+        # self.on_back = on_back
 
         self._create_controls()
 
@@ -45,7 +45,7 @@ class CrearPreguntas(ft.View):
                             self.lista_preguntas,
                             ft.Divider(),
                             self.btn_finish,
-                            self.btn_back,
+                            # self.btn_back,
                         ],
                     ),
                 )
@@ -111,10 +111,10 @@ class CrearPreguntas(ft.View):
             on_click=self._on_finish_click,
         )
 
-        self.btn_back = ft.Button(
-            "Volver",
-            on_click=self._on_back_click,
-        )
+        # self.btn_back = ft.Button(
+        #    "Volver",
+        #    on_click=self._on_back_click,
+        # )
 
     def cambiar_lista(self, clave_boton):
         self.tipo_pregunta = clave_boton
@@ -142,9 +142,9 @@ class CrearPreguntas(ft.View):
         if self.on_finish:
             self.on_finish()
 
-    def _on_back_click(self, e):
-        if self.on_back:
-            self.on_back()
+    # def _on_back_click(self, e):
+    #    if self.on_back:
+    #       self.on_back()
 
 
 if __name__ == "__main__":

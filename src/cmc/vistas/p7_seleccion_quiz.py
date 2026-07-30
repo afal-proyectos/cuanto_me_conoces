@@ -107,13 +107,13 @@ class SeleccionQuizView(ft.View):
         ]
 
     def _on_editar(self, e):
-        id = e.control.data
-        print("id: ", id)
-        if self.on_continuar:
-            self._on_continuar(id)
+        # self.id_quiz = e.control.data
+        # print("idp7: ", self.id_quiz)
+        if self.on_editar:
+            self.on_editar(e)
 
     def _on_volver(self, e):
-        print("volver")
+        # print("volver")
         if self.on_volver:
             self.on_volver()
 

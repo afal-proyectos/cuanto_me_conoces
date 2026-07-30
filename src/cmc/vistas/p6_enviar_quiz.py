@@ -4,7 +4,7 @@ import flet as ft
 class Enviar(ft.AlertDialog):
     def __init__(
         self,
-        question_text="",
+        advertencia="",
         on_save=None,
         on_cancel=None,
     ):
@@ -17,7 +17,7 @@ class Enviar(ft.AlertDialog):
 
         self._create_controls()
 
-        self.title = ft.Text(question_text)
+        self.title = ft.Text(advertencia)
         self.content = self._build_content()
 
     # =====================================================
