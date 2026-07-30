@@ -4,10 +4,11 @@ from servicios.bd_local_ser import BDLocal
 
 
 class SeleccionQuizView(ft.View):
-    def __init__(self, on_continuar=None, on_volver=None):
+    def __init__(self, on_nuevo=None, on_volver=None, on_editar=None):
 
-        self.on_continuar = on_continuar
+        self.on_nuevo = on_nuevo
         self.on_volver = on_volver
+        self.on_editar = on_editar
 
         self._crear_controles()
         self._crear_vista()
@@ -31,7 +32,7 @@ class SeleccionQuizView(ft.View):
             style=ft.ButtonStyle(
                 color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
             ),
-            on_click=self._on_crear_quiz,
+            on_click=self._on_nuevo,
         )
         self.btn_volver = ft.Button(
             "Regresar",
@@ -84,6 +85,7 @@ class SeleccionQuizView(ft.View):
                                         title=ft.Text(
                                             item["nombre_evento"],
                                             weight=ft.FontWeight.BOLD,
+                                            color=ft.Colors.WHITE,
                                         ),
                                         subtitle=ft.Text(
                                             f"Para: {item['nombre_creador']}\n{item['comentario']}\n{item['cantidad_preguntas']} preguntas."
@@ -97,14 +99,14 @@ class SeleccionQuizView(ft.View):
                         "Edit",
                         # expand_loose=True,
                         data=id,
-                        on_click=self._on_editar_quiz,
+                        on_click=self._on_editar,
                     ),
                 ],
             )
             for id, item in lista.items()
         ]
 
-    def _on_editar_quiz(self, e):
+    def _on_editar(self, e):
         id = e.control.data
         print("id: ", id)
         if self.on_continuar:
@@ -115,8 +117,9 @@ class SeleccionQuizView(ft.View):
         if self.on_volver:
             self.on_volver()
 
-    def _on_crear_quiz(self):
-        print("abrir ventana de creador")
+    def _on_nuevo(self):
+        if self.on_nuevo:
+            self.on_nuevo()
 
 
 if __name__ == "__main__":

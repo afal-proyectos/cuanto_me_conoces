@@ -1,17 +1,25 @@
 import flet as ft
 
 
-class DatosQuizView(ft.View):
+class DatosQuizView(ft.AlertDialog):
     def __init__(
         self,
         on_continuar=None,
         on_volver=None,
     ):
+        super().__init__(
+            modal=True,
+        )
         # callbacks
         self.on_continuar = on_continuar
         self.on_volver = on_volver
 
-        # Controles
+        self.crear_controles()
+
+        self.title = self.lbl_titulo
+        self.content = self._build_content()
+
+    def crear_controles(self):
         self.lbl_titulo = ft.Container(
             content=ft.Text("Crear Nuevo", size=30, weight=ft.FontWeight.BOLD),
             margin=ft.Margin.only(bottom=5),
@@ -55,7 +63,26 @@ class DatosQuizView(ft.View):
             on_click=self._on_volver_click,
         )
 
-        # vista
+    def _build_content(self):
+        return ft.Column(
+            tight=True,
+            expand=True,
+            controls=[
+                self.lbl_titulo,
+                self.txt_nombre,
+                self.txt_evento,
+                self.txt_comentario,
+                self.cmb_cantidad,
+                ft.Row(
+                    controls=[
+                        self.btn_continuar,
+                        self.btn_volver,
+                    ]
+                ),
+            ],
+        )
+
+        """    
         super().__init__(
             route="/datos",
             controls=[
@@ -82,6 +109,7 @@ class DatosQuizView(ft.View):
                 )
             ],
         )
+    """
 
     def _validar_campos(self, e):
         nombre_ok = bool(self.txt_nombre.value and self.txt_nombre.value.strip())
@@ -112,20 +140,34 @@ class DatosQuizView(ft.View):
 if __name__ == "__main__":
 
     def main(page: ft.Page):
+        page.title = "Prueba de Crear quiz"
+        page.theme_mode = ft.ThemeMode.LIGHT
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-        page.title = "Prueba dos"
-        page.views.clear()
-        page.views.append(
-            DatosQuizView(
-                on_continuar=lambda nombre_creador, nombre_evento, cantidad_preguntas: (
-                    print(
-                        f"Nombre: {nombre_creador}, Evento: {nombre_evento}, Cantidad: {cantidad_preguntas}"
-                    )
-                ),
-                on_volver=lambda: print("Regresar"),
-            )
+        def cerrar_dialogo(e=None):
+            page.pop_dialog()
+            page.update()
+
+        def guardar_datos():
+            print(f"Datos guardados:")
+            cerrar_dialogo()
+
+        # Instanciamos el diálogo
+        dlg = DatosQuizView(
+            # question_text="¿Cuál es tu lenguaje favorito?",
+            on_continuar=guardar_datos,
+            on_volver=cerrar_dialogo,
         )
 
-        page.update()
+        # Botón para mostrar el diálogo
+        btn_abrir = ft.Button(
+            "Configurar Opciones",
+            on_click=lambda _: page.show_dialog(dlg),
+        )
+
+        page.add(
+            ft.Text("Haz clic para ver el diálogo de opciones", size=20), btn_abrir
+        )
 
     ft.run(main)

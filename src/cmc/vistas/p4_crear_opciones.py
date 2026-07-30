@@ -23,10 +23,6 @@ class CrearOpciones(ft.AlertDialog):
         self.content = self._build_content()
         # self.actions = [self.btn_cancel, self.btn_save]
 
-    # =====================================================
-    # Controles
-    # =====================================================
-
     def _create_controls(self):
 
         self.txt_option1 = ft.TextField(label="Opción 1")

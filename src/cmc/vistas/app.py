@@ -4,6 +4,7 @@ from vistas.p1_inicio_flet import InicioView
 from vistas.p2_crear_quiz import DatosQuizView
 from vistas.p3_crear_preguntas import CrearPreguntas
 from vistas.p5_editar_quiz import QuizEditor
+from vistas.p7_seleccion_quiz import SeleccionQuizView
 
 from vistas.p4_crear_opciones import CrearOpciones
 from vistas.p6_enviar_quiz import Enviar
@@ -58,6 +59,12 @@ class App:
             on_enviar_quiz=self._enviar_quiz,
             on_back=self._crear_preguntas,
         )
+        # p7
+        self.seleccion_quiz_view = SeleccionQuizView(
+            on_nuevo=self._abrir_crear_quiz,
+            on_volver=self._mostrar_inicio,
+            on_editar=None,
+        )
 
     # Navegación
     # Seleccionar ventana : parametro, la ventana, limpia, agrega y actualiza
@@ -70,9 +77,9 @@ class App:
     def _mostrar_inicio(self):
         self._elegir_view(self.inicio_view)  # se elije mostrar p1
 
-    # opción de ir a p2
+    # opción de ir a p7
     def _datos_quiz(self):
-        self._elegir_view(self.datos_quiz_view)  # se elije mostrar p2
+        self._elegir_view(self.seleccion_quiz_view)  # se elije mostrar p7
 
     # ir a p3
     def _crear_preguntas(self, *args, **kwargs):
@@ -82,7 +89,6 @@ class App:
         print(f"datos para crear quiz -->{datos_entrada}")
         id = q.crear(datos=datos_entrada)
         print(f"ID{id}")
-        ##########retomar desde aquí mañana<---------------------------------------
 
         self._elegir_view(self.crear_preguntas_view)
 
@@ -97,6 +103,13 @@ class App:
             question_text=pregunta,
             on_save=self._save_question,
             on_cancel=lambda: self.page.pop_dialog(),
+        )
+        self.page.show_dialog(dialog)
+
+    # ir a p2
+    def _abrir_crear_quiz(self):
+        dialog = DatosQuizView(
+            on_continuar=self._crear_preguntas, on_volver=lambda: self.page.pop_dialog()
         )
         self.page.show_dialog(dialog)
 
@@ -117,7 +130,6 @@ class App:
     # Acción al enviar el quiz en p6
     def _crear_quiz(self):
         print("crear quiz")
-        print("")
         self.page.pop_dialog()
 
     # guardar en p4

@@ -118,7 +118,7 @@ class CrearPreguntas(ft.View):
 
     def cambiar_lista(self, clave_boton):
         self.tipo_pregunta = clave_boton
-        alternativas = tx.Vista3.opciones.get(self.tipo_pregunta, [])
+        alternativas = tx.opciones.get(self.tipo_pregunta, [])
         self.lista_preguntas.controls = [
             ft.ListTile(
                 title=ft.Text(text),
