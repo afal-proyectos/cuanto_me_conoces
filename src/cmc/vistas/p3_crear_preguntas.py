@@ -1,5 +1,5 @@
 import flet as ft
-from textos.txt import TextosApp as tx
+from textos.txt import TxPreguntas as tx
 
 
 class CrearPreguntas(ft.View):
@@ -74,7 +74,7 @@ class CrearPreguntas(ft.View):
             style=ft.ButtonStyle(
                 color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
             ),
-            on_click=lambda e: self.cambiar_lista("btn_1"),
+            on_click=lambda e: self.cambiar_lista("multiple"),
         )
         self.verdad_mentira = ft.Button(
             "Verdad o Mentira",
@@ -84,7 +84,7 @@ class CrearPreguntas(ft.View):
             style=ft.ButtonStyle(
                 color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
             ),
-            on_click=lambda e: self.cambiar_lista("btn_2"),
+            on_click=lambda e: self.cambiar_lista("vof"),
         )
         self.ranking_10 = ft.Button(
             "Del 1 al 10",
@@ -117,11 +117,14 @@ class CrearPreguntas(ft.View):
         )
 
     def cambiar_lista(self, clave_boton):
-        alternativas = tx.Vista3.opciones.get(clave_boton, [])
+        self.tipo_pregunta = clave_boton
+        alternativas = tx.Vista3.opciones.get(self.tipo_pregunta, [])
         self.lista_preguntas.controls = [
             ft.ListTile(
                 title=ft.Text(text),
-                on_click=lambda e, t=text: self._on_question_click(t),
+                on_click=lambda e, t=text: self._on_question_click(
+                    t, self.tipo_pregunta
+                ),
             )
             for text in alternativas
         ]
@@ -130,10 +133,10 @@ class CrearPreguntas(ft.View):
     # def clear_questions(self):
     #    self.lst_questions.controls.clear()
     #    self.update()
-    def _on_question_click(self, pregunta):
+    def _on_question_click(self, pregunta, tipo):
         if self.on_question_selected:
-            self.on_question_selected(pregunta)
-            print(f"Seleccionado:{pregunta}")
+            self.on_question_selected(pregunta, tipo)
+            print(f"Seleccionado:{tipo}={pregunta}")
 
     def _on_finish_click(self, e):
         if self.on_finish:

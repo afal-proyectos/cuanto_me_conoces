@@ -4,6 +4,7 @@ import flet as ft
 class CrearOpciones(ft.AlertDialog):
     def __init__(
         self,
+        tipo_pregunta=None,
         question_text=None,
         on_save=None,
         on_cancel=None,
@@ -17,7 +18,7 @@ class CrearOpciones(ft.AlertDialog):
         self.on_cancel = on_cancel
 
         self._create_controls()
-
+        self.tipo = tipo_pregunta
         self.title = ft.Text(question_text)
         self.content = self._build_content()
         # self.actions = [self.btn_cancel, self.btn_save]
@@ -134,9 +135,10 @@ class CrearOpciones(ft.AlertDialog):
     # =====================================================
 
     def _on_save_click(self, e):
-
+        # print(f"prueba de tipo:{self.tipo}")
         if self.on_save:
             self.on_save(
+                tipo=self.tipo,
                 pregunta=self.title.value,
                 option1=self.txt_option1.value,
                 option2=self.txt_option2.value,

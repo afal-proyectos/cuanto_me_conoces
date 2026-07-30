@@ -78,19 +78,23 @@ class App:
     def _crear_preguntas(self, *args, **kwargs):
         self.datos_creacion_quiz = kwargs
         q = QuizM()
-        datos_entrada = list(self.datos_creacion_quiz.values())
+        datos_entrada = self.datos_creacion_quiz
         print(f"datos para crear quiz -->{datos_entrada}")
-        q.crear(datos=datos_entrada)
+        id = q.crear(datos=datos_entrada)
+        print(f"ID{id}")
+        ##########retomar desde aquí mañana<---------------------------------------
+
         self._elegir_view(self.crear_preguntas_view)
 
     # ir a p5
     def _mostrar_editor(self):
         self._elegir_view(self.editor_view)
 
-    # ir a p4 : necesitamos más información en los parametros
-    def _abrir_editor_opciones(self, pregunta):
+    # ir a p4 :
+    def _abrir_editor_opciones(self, pregunta, tipo):
         dialog = CrearOpciones(
-            question_text=f"Pregunta {pregunta}",
+            tipo_pregunta=tipo,
+            question_text=pregunta,
             on_save=self._save_question,
             on_cancel=lambda: self.page.pop_dialog(),
         )
@@ -118,8 +122,7 @@ class App:
 
     # guardar en p4
     def _save_question(self, **data):
-        # print(f"Guardar pregunta: {pregunta}")
-        print(f"opciones{data}")
+        print(f"Info pregunta:{data}")
         self.page.pop_dialog()
 
         # agregar función para guardar las preguntas
