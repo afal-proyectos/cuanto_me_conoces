@@ -46,6 +46,7 @@ class BDLocal:
                 quiz_local = json.load(archivo)
         except FileNotFoundError:
             print("No hay datos guardados")
+
         return quiz_local
 
     def habilitar_quiz(self, id):

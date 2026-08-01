@@ -150,7 +150,7 @@ if __name__ == "__main__":
             page.update()
 
         def guardar_datos():
-            print(f"Datos guardados:")
+            print("Datos guardados:")
             cerrar_dialogo()
 
         # Instanciamos el diálogo

@@ -49,11 +49,6 @@ class QuizQuestionTile(ft.ExpansionTile):
             self.on_delete(self.question_id)
 
 
-# ==========================================================
-# Vista
-# ==========================================================
-
-
 class QuizEditor(ft.View):
     def __init__(
         self,

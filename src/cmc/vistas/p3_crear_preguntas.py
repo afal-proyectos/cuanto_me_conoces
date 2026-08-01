@@ -156,13 +156,16 @@ if __name__ == "__main__":
         view = CrearPreguntas(
             on_question_selected=lambda q: print(f"Pregunta {q}"),
             on_finish=lambda: print("Terminar Quiz"),
-            on_back=lambda: print("Volver"),
+            # on_back=lambda: print("Volver"),
         )
 
         page.views.append(view)
         page.update()
         # Datos de prueba
+        ft.run(main)
 
+
+"""
         view.add_question(1, "¿Cuál es mi color favorito?")
         view.add_question(2, "¿Cuál es mi película favorita?")
         view.add_question(3, "¿Cuál es mi comida favorita?")
@@ -171,5 +174,4 @@ if __name__ == "__main__":
         view.add_question(6, "¿Cuál es mi mascota favorita?")
         view.add_question(7, "¿Cuál es mi bebida favorita?")
         view.add_question(8, "¿Cuál es mi libro favorito?")
-
-    ft.run(main)
+"""

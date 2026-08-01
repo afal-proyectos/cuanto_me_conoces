@@ -1,14 +1,20 @@
 import flet as ft
-
 from servicios.bd_local_ser import BDLocal
 
 
 class SeleccionQuizView(ft.View):
-    def __init__(self, on_nuevo=None, on_volver=None, on_editar=None):
+    def __init__(
+        self,
+        on_nuevo=None,
+        on_volver=None,
+        on_editar=None,
+    ):
 
         self.on_nuevo = on_nuevo
         self.on_volver = on_volver
         self.on_editar = on_editar
+        bdl = BDLocal()
+        self.dic_quiz = bdl.mostrar_quiz_local()
 
         self._crear_controles()
         self._crear_vista()
@@ -19,7 +25,7 @@ class SeleccionQuizView(ft.View):
         self.titulo = ft.Text(
             "Elije un Quiz para terminarlo",
             size=18,
-            expand=True,
+            # expand=True,
             weight=ft.FontWeight.BOLD,
         )
         self.lista_quiz = ft.Column(controls=self.crear_tarjetas())
@@ -27,7 +33,7 @@ class SeleccionQuizView(ft.View):
         self.btn_crear_nuevo_quiz = ft.Button(
             "Crear nuevo Quiz",
             height=50,
-            expand=True,
+            # expand=True,
             bgcolor=ft.Colors.RED,
             style=ft.ButtonStyle(
                 color=ft.Colors.WHITE, shape=ft.RoundedRectangleBorder(radius=2)
@@ -37,9 +43,11 @@ class SeleccionQuizView(ft.View):
         self.btn_volver = ft.Button(
             "Regresar",
             bgcolor=ft.Colors.RED,
-            expand=True,
+            # expand=True,
             on_click=self._on_volver,
-            style=ft.ButtonStyle(color=ft.Colors.WHITE),
+            style=ft.ButtonStyle(
+                color=ft.Colors.WHITE,
+            ),
         )
 
     def _crear_vista(self):
@@ -50,7 +58,7 @@ class SeleccionQuizView(ft.View):
                     expand=True,
                     padding=2,
                     content=ft.Column(
-                        scroll=ft.ScrollMode.AUTO,
+                        # scroll=ft.ScrollMode.AUTO,
                         expand=True,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         controls=[
@@ -58,7 +66,13 @@ class SeleccionQuizView(ft.View):
                             self.btn_crear_nuevo_quiz,
                             ft.Divider(),
                             self.titulo,
-                            self.lista_quiz,
+                            ft.Column(
+                                controls=[self.lista_quiz],
+                                scroll=ft.ScrollMode.AUTO,
+                                expand=True,  # Obligatorio para que ocupe el espacio disponible
+                                height=500,
+                            ),
+                            ft.Divider(),
                             self.btn_volver,
                         ],
                     ),
@@ -67,12 +81,10 @@ class SeleccionQuizView(ft.View):
         )
 
     def crear_tarjetas(self):
-        bdl = BDLocal()
-        lista = bdl.mostrar_quiz_local()
 
         return [
             ft.Row(
-                # alignment=ft.MainAxisAlignment.START,
+                alignment=ft.MainAxisAlignment.START,
                 controls=[
                     ft.Card(
                         expand=True,
@@ -88,7 +100,8 @@ class SeleccionQuizView(ft.View):
                                             color=ft.Colors.WHITE,
                                         ),
                                         subtitle=ft.Text(
-                                            f"Para: {item['nombre_creador']}\n{item['comentario']}\n{item['cantidad_preguntas']} preguntas."
+                                            f"Para: {item['nombre_creador']}\n{item['comentario']}\n{item['cantidad_preguntas']} preguntas.",
+                                            color=ft.Colors.WHITE,
                                         ),
                                     ),
                                 ],
@@ -103,7 +116,7 @@ class SeleccionQuizView(ft.View):
                     ),
                 ],
             )
-            for id, item in lista.items()
+            for id, item in reversed(self.dic_quiz.items())
         ]
 
     def _on_editar(self, e):

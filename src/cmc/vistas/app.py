@@ -1,17 +1,13 @@
 import flet as ft
-
+from models.quiz_model import QuizM
+from servicios.bd_local_ser import BDLocal
 from vistas.p1_inicio_flet import InicioView
 from vistas.p2_crear_quiz import DatosQuizView
 from vistas.p3_crear_preguntas import CrearPreguntas
-from vistas.p5_editar_quiz import QuizEditor
-from vistas.p7_seleccion_quiz import SeleccionQuizView
-
 from vistas.p4_crear_opciones import CrearOpciones
+from vistas.p5_editar_quiz import QuizEditor
 from vistas.p6_enviar_quiz import Enviar
-
-# from textos.txt import TextosVistas as tx
-from models.quiz_model import QuizM
-from servicios.bd_local_ser import BDLocal
+from vistas.p7_seleccion_quiz import SeleccionQuizView
 
 
 class App:
@@ -45,6 +41,7 @@ class App:
             on_nuevo=self._abrir_crear_quiz,
             on_volver=self._mostrar_inicio,
             on_editar=self._mostrar_editor,
+            # dict_quiz=self._quiz_local,
             # id_quiz="",
         )
 
@@ -82,14 +79,33 @@ class App:
         self._elegir_view(self.seleccion_quiz_view)  # se elije mostrar p7
 
     # ir a p3
-    def _crear_preguntas(self, *args, **kwargs):
+    def _crear_quiz(self, *args, **kwargs):
+        self.page.pop_dialog()
         self.datos_creacion_quiz = kwargs
         q = QuizM()
         datos_entrada = self.datos_creacion_quiz
-        print(f"Datos para crear quiz -->{datos_entrada}")
-        id = q.crear(datos=datos_entrada)
-        print(f"ID Quiz -->{id}")
-        self._elegir_view(self.crear_preguntas_view)
+        # print(f"Datos para crear quiz -->{datos_entrada}")
+        # id =
+        q.crear(datos=datos_entrada)
+        # print(f"ID Quiz -->{id}")
+        quiz_actualizados = q.lista_actual()
+        a = self.seleccion_quiz_view.crear_tarjetas()
+        self.seleccion_quiz_view.dic_quiz = quiz_actualizados
+        # print(f"Ultimo---->{self.seleccion_quiz_view.dic_quiz[id]}")
+        self.seleccion_quiz_view.lista_quiz.controls.clear()
+        self.seleccion_quiz_view.lista_quiz.controls.append(
+            ft.Column(controls=self.seleccion_quiz_view.crear_tarjetas())
+        )
+        self.seleccion_quiz_view.lista_quiz.update()
+
+    def _quiz_local():
+        bdl = BDLocal()
+        quiz_local = bdl.mostrar_quiz_local()
+        return quiz_local
+
+        # self.seleccion_quiz_view.lista_quiz.conreolls.
+        # self.seleccion_quiz_view.lista_quiz.update()
+        # self._elegir_view(self.crear_preguntas_view)
         # el id debe ser el unico quiz editable
 
     # ir a p5
@@ -120,8 +136,10 @@ class App:
     # ir a p2 (flotante)
     def _abrir_crear_quiz(self):
         dialog = DatosQuizView(
-            on_continuar=self._crear_preguntas, on_volver=lambda: self.page.pop_dialog()
+            on_continuar=self._crear_quiz,
+            on_volver=lambda: self.page.pop_dialog(),
         )
+
         self.page.show_dialog(dialog)
 
     # ir a p6 (flotante)
