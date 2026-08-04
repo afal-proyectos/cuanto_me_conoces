@@ -5,27 +5,8 @@ from servicios.bd_local_ser import BDLocal
 
 class QuizM:
     def __init__(self):
-        pass
-        self.bdl = BDLocal()
 
-    def ordenar_datos(
-        self,
-        fecha,
-        creador,
-        evento,
-        estado,
-        cantidad,
-        preguntas,
-    ):
-        datos = [
-            fecha,
-            creador,
-            evento,
-            estado,
-            cantidad,
-            preguntas,
-        ]
-        return datos
+        self.bdl = BDLocal()
 
     def crear(self, datos: dict):
         id = str(uuid.uuid4())

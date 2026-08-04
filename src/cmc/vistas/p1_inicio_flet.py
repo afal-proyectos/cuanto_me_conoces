@@ -9,20 +9,15 @@ class InicioView(ft.View):
         on_seguir_editando=None,
         on_ver_ranking=None,
     ):
-        # =====================
-        # Callbacks
-        # =====================
+
         self.on_nuevo_quiz = on_nuevo_quiz
         self.on_seguir_editando = on_seguir_editando
         self.on_ver_ranking = on_ver_ranking
 
-        # =====================
-        # Controles
-        # =====================
-
         self.ibl_titulo = ft.Text(
             tx.nombre_app,
-            margin=100,
+            # padding=5,
+            text_align=ft.TextAlign.CENTER,
             size=50,
             weight=ft.FontWeight.BOLD,
         )

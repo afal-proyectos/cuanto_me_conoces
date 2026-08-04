@@ -1,5 +1,5 @@
 class TxInfoApp:
-    nombre_app = "¿Cúanto Me conoces?"
+    nombre_app = "¿Cúanto me Conoces?"
 
 
 class TxPreguntas:

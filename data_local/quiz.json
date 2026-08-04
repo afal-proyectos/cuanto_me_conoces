@@ -4,13 +4,128 @@
         "nombre_evento": "Cerro Alegre",
         "comentario": "Prueba 1",
         "cantidad_preguntas": 5,
-        "editable": false
+        "data_preguntas": []
     },
     "2a43ab4e-11eb-4ba9-98cc-74c6436e3279": {
-        "nombre_creador": "as",
-        "nombre_evento": "as",
+        "nombre_creador": "De prueba",
+        "nombre_evento": "Preguntas",
         "comentario": "as",
         "cantidad_preguntas": 5,
-        "editable": false
+        "data_preguntas": [
+            {
+                "id_pregunta": "2a43ab4e-11eb-4ba9-98cc-74c6436e3201",
+                "index": 1,
+                "pregunta": "¿Anime Favorito?",
+                "opciones": {
+                    "1": "Dragon Ball Z",
+                    "2": "Demon Slayers",
+                    "3": "Bako no Hero"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": -2,
+                    "3": 0
+                }
+            },
+            {
+                "id_pregunta": "2a43ab4e-11eb-4ba9-98cc-74c6436e3202",
+                "index": 1,
+                "pregunta": "¿Superhéroe favorito?",
+                "opciones": {
+                    "1": "Batman",
+                    "2": "Superman",
+                    "3": "WonderWoman"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": -2,
+                    "3": 0
+                }
+            }
+        ]
+    },
+    "fe784bca-2f2f-49b5-8218-3fae2920dd63": {
+        "nombre_creador": "Alejandro",
+        "nombre_evento": "Prueba 14",
+        "comentario": "Hola",
+        "cantidad_preguntas": 5
+    },
+    "8a2165a0-6087-47df-b2f5-bc30842ba507": {
+        "nombre_creador": "Ale",
+        "nombre_evento": "Prueba 15",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "aa13c39a-78ff-46db-9253-7d55c84b8336": {
+        "nombre_creador": "Alma",
+        "nombre_evento": "Prueba 16",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "d4d625f3-e817-4712-95df-7cb12fdcbe74": {
+        "nombre_creador": "Val",
+        "nombre_evento": "Prueba 17",
+        "comentario": "",
+        "cantidad_preguntas": 7
+    },
+    "7bd656ab-3600-4a65-a3bc-7e83d6abe896": {
+        "nombre_creador": "Valeska Vera",
+        "nombre_evento": "Aniversario",
+        "comentario": "Hola",
+        "cantidad_preguntas": 10
+    },
+    "0e5134f9-7815-4464-871b-0d7307c677f1": {
+        "nombre_creador": "Javi",
+        "nombre_evento": "Prueba 18",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "170ba94c-4c27-409e-a33c-c7f1d944056c": {
+        "nombre_creador": "Feña",
+        "nombre_evento": "Prueba 19",
+        "comentario": "hola",
+        "cantidad_preguntas": 5
+    },
+    "6e3f82cc-20b8-400f-9548-05ee877ed71a": {
+        "nombre_creador": "Javiera",
+        "nombre_evento": "Prueba 20",
+        "comentario": "Hola",
+        "cantidad_preguntas": 5
+    },
+    "76ecbc6a-989f-45ce-8360-89ca92bdc6cd": {
+        "nombre_creador": "Alejandro",
+        "nombre_evento": "Prueba 21",
+        "comentario": "",
+        "cantidad_preguntas": 10
+    },
+    "f86fa07f-7f62-4c9d-9a27-e12f519dcb0f": {
+        "nombre_creador": "Ale",
+        "nombre_evento": "Prueba 22",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "a81ee678-55ad-49f1-9f42-f8b478359f44": {
+        "nombre_creador": "Hola",
+        "nombre_evento": "Prueba 23",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "2819a5d3-0b2d-4ae3-91bc-736cc5eb8b15": {
+        "nombre_creador": "Javi",
+        "nombre_evento": "Prueba 24",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "2b0547b5-c869-43ae-86bb-ccf18686f001": {
+        "nombre_creador": "Hola",
+        "nombre_evento": "Prueba 25",
+        "comentario": "",
+        "cantidad_preguntas": 5
+    },
+    "2ffcba5b-9e4a-4c11-9107-76635c4105aa": {
+        "nombre_creador": "Hola",
+        "nombre_evento": "Prueba 26",
+        "comentario": "ja",
+        "cantidad_preguntas": 5
     }
 }

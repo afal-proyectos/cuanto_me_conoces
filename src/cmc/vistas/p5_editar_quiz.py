@@ -1,216 +1,255 @@
 import flet as ft
 
 
-class QuizQuestionTile(ft.ExpansionTile):
+class EditorQuiz(ft.View):
     def __init__(
         self,
-        question_id,
-        question,
-        options,
-        score,
-        on_edit=None,
-        on_delete=None,
+        # id_habilitado=None,
+        quiz_preguntas=None,
+        on_agregar=None,
+        on_editar=None,
+        on_eliminar_pregunta=None,
+        on_cambiar=None,
+        on_eliminar_quiz=None,
+        on_terminar=None,
     ):
-        super().__init__(
-            title=ft.Text(question),
-            subtitle=ft.Text(f"Puntaje: {score}"),
-            controls=[
-                ft.Text("Alternativas"),
-                *[ft.Text(f"• {option}") for option in options],
-                ft.Divider(),
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.END,
-                    controls=[
-                        ft.IconButton(
-                            icon=ft.Icons.EDIT,
-                            tooltip="Editar",
-                            on_click=self._edit_click,
-                        ),
-                        ft.IconButton(
-                            icon=ft.Icons.DELETE,
-                            tooltip="Eliminar",
-                            on_click=self._delete_click,
-                        ),
-                    ],
-                ),
-            ],
+
+        self.on_terminar = on_terminar
+        self.on_eliminar_quiz = on_eliminar_quiz
+        self.on_cambiar = on_cambiar
+        self.on_eliminar_pregunta = on_eliminar_pregunta
+        self.on_editar = on_editar
+        self.on_agregar = on_agregar
+        self.data_quiz = (
+            quiz_preguntas  # es la data de TODo el quiz, no solo las preguntas
         )
 
-        self.question_id = question_id
-        self.on_edit = on_edit
-        self.on_delete = on_delete
+        self._info_quiz()
+        self._controles()
+        self._vista()
 
-    def _edit_click(self, e):
-        if self.on_edit:
-            self.on_edit(self.question_id)
+    # Metódo en contrucción, necesario para luego dibujar info en pantalla.
+    def _info_quiz(self):
+        self.id_quiz = "pregunta[]"
 
-    def _delete_click(self, e):
-        if self.on_delete:
-            self.on_delete(self.question_id)
+    def _controles(self):
+        self.cantidad_preguntas = ft.Text(self.contador_pregunta())
 
-
-class QuizEditor(ft.View):
-    def __init__(
-        self,
-        on_edit_question=None,
-        on_delete_question=None,
-        on_enviar_quiz=None,
-        on_back=None,
-    ):
-        super().__init__(route="/editor")
-
-        self.on_edit_question = on_edit_question
-        self.on_delete_question = on_delete_question
-        self.on_send_quiz = on_enviar_quiz
-        self.on_back = on_back
-
-        self._create_controls()
-        self._build_layout()
-
-    # ------------------------------------------------------
-
-    def _create_controls(self):
-
-        self.lbl_title = ft.Text(
-            "Editar Quiz",
-            size=32,
+        self.titulo = ft.Text(
+            "Editor de Quiz",
+            align=ft.Alignment.CENTER,
+            size=20,
             weight=ft.FontWeight.BOLD,
         )
 
-        self.lbl_counter = ft.Text("Preguntas: 0 / 10")
+        self.agregar_nueva_pregunta = ft.Button(
+            "Agregar Pregunta", align=ft.Alignment.CENTER, on_click=self._on_agregar
+        )
 
-        self.lst_questions = ft.ListView(
+        self.editar_pregunta = ft.IconButton(
+            icon=ft.Icons.EDIT,
+            tooltip="Editar",
+            align=ft.Alignment.CENTER,
             expand=True,
-            spacing=8,
+            on_click=self._on_editar,
         )
 
-        self.btn_send = ft.Button(
-            "Enviar Quiz",
-            on_click=self._send_click,
+        self.eliminar_pregunta = ft.IconButton(
+            icon=ft.Icons.DELETE,
+            tooltip="Eliminar",
+            align=ft.Alignment.CENTER,
+            on_click=self._on_eliminar_pregunta,
         )
 
-        self.btn_back = ft.Button(
-            "Volver",
-            on_click=self._back_click,
+        self.lista_pregunta = ft.Column(
+            controls=self._agregar_pregunta()
+        )  # "controls" es una lista de elementos.
+
+        self.cambiar_quiz = ft.Button(
+            "Cambiar de Quiz",
+            align=ft.Alignment.CENTER,
+            expand=True,
+            # data=list(self.data_quiz)[0] if self.data_quiz else None,
+            on_click=self._on_cambiar,
         )
 
-    # ------------------------------------------------------
+        self.eliminar_quiz = ft.Button(
+            "Eliminar Quiz",
+            align=ft.Alignment.CENTER,
+            on_click=self._on_eliminar_quiz,
+        )
 
-    def _build_layout(self):
+        self.terminar = ft.Button(
+            "Terminar Quiz", align=ft.Alignment.CENTER, on_click=self._on_terminar
+        )
 
-        self.controls = [
-            ft.Container(
-                expand=True,
-                padding=20,
-                content=ft.Column(
-                    expand=True,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    def _vista(self):
+        super().__init__(
+            route="/editor_quiz",
+            padding=20,
+            controls=[
+                ft.Column(
                     controls=[
-                        self.lbl_title,
-                        ft.Divider(),
-                        self.lst_questions,
-                        ft.Divider(),
-                        self.lbl_counter,
-                        self.btn_send,
-                        self.btn_back,
+                        self.titulo,
+                        self.cantidad_preguntas,
+                        self.lista_pregunta,
+                        ft.Column(
+                            controls=[self.agregar_nueva_pregunta, self.terminar],
+                            scroll=ft.ScrollMode.AUTO,
+                            expand=True,
+                        ),
+                        ft.Row(
+                            vertical_alignment=ft.CrossAxisAlignment.END,
+                            controls=[self.cambiar_quiz, self.eliminar_quiz],
+                        ),
                     ],
-                ),
-            )
-        ]
-
-    # =====================================================
-    # API pública
-    # =====================================================
-
-    def add_question(
-        self,
-        question_id,
-        question,
-        options,
-        score,
-    ):
-        self.tile = QuizQuestionTile(
-            question_id=question_id,
-            question=question,
-            options=options,
-            score=score,
-            on_edit=self.on_edit_question,
-            on_delete=self.on_delete_question,
+                    expand=True,
+                )
+            ],
         )
-        self.btn_back.data = question_id  # agrego a data, del botón volver, el id del quiz para deshabilarlo
-        self.lst_questions.controls.append(self.tile)
-        self.update_counter()
-        self.update()
 
-    # ------------------------------------------------------
+    def _agregar_pregunta(self):  # devuelve la lista de elementos que necesitaremos
+        lista = []
+        # acceso a la lista de preguntas del diccionario
+        preguntas = self.data_quiz.get("data_preguntas", [])
+        for dato in preguntas:
+            elemento = ft.ExpansionTile(
+                expanded=True,
+                title=ft.Text(dato["pregunta"]),
+                controls=[
+                    ft.Column(
+                        controls=[
+                            ft.Row(
+                                controls=[
+                                    ft.Column(
+                                        controls=self._agregar_opciones(
+                                            dato["opciones"]
+                                        ),
+                                        expand=True,
+                                    ),
+                                    ft.Column(
+                                        controls=self._agregar_puntaje(dato["puntaje"]),
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                    ),
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[self.editar_pregunta, self.eliminar_pregunta],
+                            ),
+                        ]
+                    )
+                ],
+            )
+            # for dato in self.pregunta.values()
 
-    def clear_questions(self):
-        self.lst_questions.controls.clear()
-        self.update_counter()
-        self.update()
+            lista.append(elemento)
 
-    # ------------------------------------------------------
+        return lista
 
-    def update_counter(self, total=10):
-        current = len(self.lst_questions.controls)
-        self.lbl_counter.value = f"Preguntas: {current} / {total}"
+    def contador_pregunta(self, total=10):  ########revisar desde aquí
+        preguntas = self.data_quiz.get("data_preguntas", [])
+        agregadas = len(preguntas)
+        total_quiz = self.data_quiz.get("cantidad_preguntas", total)
+        contador = f"Preguntas: {agregadas} / {total_quiz}"
+        return contador
 
-    # =====================================================
-    # Eventos
-    # =====================================================
+    def _agregar_opciones(self, opciones):
+        return [ft.Text(op) for op in opciones.values()]
 
-    def _send_click(self, e):
-        if self.on_send_quiz:
-            self.on_send_quiz()
+    def _agregar_puntaje(self, puntaje):
+        return [ft.Text(f"{p} puntos.") for p in puntaje.values()]
 
-    # ------------------------------------------------------
+    def _on_agregar(self, e):
+        if self.on_agregar:
+            self.on_agregar()
 
-    def _back_click(self, e):
-        if self.on_back:
-            self.on_back(e)
+    def _on_editar(self, e):
+        if self.on_editar:
+            self.on_editar()
 
+    def _on_eliminar_pregunta(self, e):
+        if self.on_eliminar_pregunta:
+            self.on_eliminar_pregunta()
 
-# ==========================================================
-# Prueba
-# ==========================================================
+    def _on_eliminar_quiz(self, e):
+        if self.on_eliminar_quiz:
+            self.on_eliminar_quiz()
+
+    def _on_cambiar(self, e):
+        if self.on_cambiar:
+            self.on_cambiar()
+
+    def _on_terminar(self, e):
+        if self.on_terminar:
+            self.on_terminar()
+
+    def _on_terminar(self, e):
+        if self.on_terminar:
+            self.on_terminar()
+
 
 if __name__ == "__main__":
+    data = {
+        "2a43ab4e-11eb-4ba9-98cc-74c6436e3279": {
+            "nombre_creador": "as",
+            "nombre_evento": "as",
+            "comentario": "as",
+            "cantidad_preguntas": 5,
+            # "editable": true,
+            "data_preguntas": [
+                {
+                    "id_pregunta": "2a43ab4e-11eb-4ba9-98cc-74c6436e3201",
+                    "index": 1,
+                    "pregunta": "¿Anime Favorito?",
+                    "opciones": {
+                        "1": "Dragon Ball Z",
+                        "2": "Demon Slayers",
+                        "3": "Bako no Hero",
+                    },
+                    "puntaje": {"1": 4, "2": -2, "3": 0},
+                },
+                {
+                    "id_pregunta": "2a43ab4e-11eb-4ba9-98cc-74c6436e3202",
+                    "index": 1,
+                    "pregunta": "¿Superhéroe favorito?",
+                    "opciones": {"1": "Batman", "2": "Superman", "3": "WonderWoman"},
+                    "puntaje": {"1": 4, "2": -2, "3": 0},
+                },
+            ],
+        },
+    }
 
-    def main(page: ft.Page):
-
+    def pantalla(vista: ft.Page):
+        page = vista
         page.title = "Quiz Editor"
+        page.page.window.width = 350
+        page.page.window.height = 685
+        page.theme_mode = ft.ThemeMode.LIGHT
 
-        view = QuizEditor(
-            on_edit_question=lambda q: print(f"Editar {q}"),
-            on_delete_question=lambda q: print(f"Eliminar {q}"),
-            on_enviar_quiz=lambda: print("Enviar Quiz"),
-            on_back=lambda: print("Volver"),
+        ventana = EditorQuiz(
+            quiz_preguntas=data,
+            on_agregar=lambda: print("Agregar pregunta"),
+            on_editar=lambda: print("editar Pregunta"),
+            on_cambiar=lambda: print("Cambiar Quiz"),
+            on_eliminar_pregunta=lambda: print("Eliminar Pregunta"),
+            on_eliminar_quiz=lambda: print("Eliminar Quiz"),
+            on_terminar=lambda: print("Terminar"),
         )
 
-        page.views.append(view)
+        page.views.append(ventana)
         page.update()
 
-        view.add_question(
-            question_id=1,
-            question="¿Cuál es mi color favorito?",
-            options=["Azul", "Rojo", "Verde", "Negro"],
-            score=10,
-        )
+    ft.run(pantalla)  # , view=ft.AppView.WEB_BROWSER)
 
-        view.add_question(
-            question_id=2,
-            question="¿Cuál es mi película favorita?",
-            options=["Matrix", "Titanic", "Avatar", "Rocky"],
-            score=8,
-        )
 
-        view.add_question(
-            question_id=3,
-            question="¿Cuál es mi comida favorita?",
-            options=["Pizza", "Sushi", "Pastas", "Asado"],
-            score=5,
-        )
+"""
 
-        page.update()
+def _agregar_pregunta(self):
+        lista = []
 
-    ft.run(main)
+        dor id, dato in self.pregunta.items():
+            elemento = ft.ExpansionTile(title=ft.Text(dato["pregunta"]))
+            lista.append(elemento)
+        
+        return lista
+"""

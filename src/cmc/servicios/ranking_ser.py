@@ -1,3 +1,6 @@
+##############Archivo en contrucción, aún no desarrollado########################
+
+
 import flet as ft
 from supabase_ser import SupabaseServicio
 

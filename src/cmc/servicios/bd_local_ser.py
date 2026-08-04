@@ -17,7 +17,7 @@ class BDLocal:
         self.quiz = quiz_actual
 
         # Agregar el parametro de "editable". Por defecto False. Solo un quiz es editable a la vez
-        self.quiz["editable"] = False
+        # self.quiz["editable"] = False
 
         quiz_local = {}
 
@@ -48,6 +48,16 @@ class BDLocal:
             print("No hay datos guardados")
 
         return quiz_local
+
+    def mostrar_quiz_habilitado(self, id):
+        if id:
+            try:
+                with open(self.local, "r", encoding="utf-8") as archivo:
+                    quiz_local = json.load(archivo)
+            except FileNotFoundError:
+                print("No hay datos guardados")
+
+            return quiz_local[id]
 
     def habilitar_quiz(self, id):
         try:
@@ -86,6 +96,5 @@ class BDLocal:
 
 if __name__ == "__main__":
     bdl = BDLocal()
-    # print(f"ruta:{bdl.local}")
-    # bdl.guardar_quiz_local("2", ("hola", "chao"))
+
     bdl.mostrar_quiz_local()

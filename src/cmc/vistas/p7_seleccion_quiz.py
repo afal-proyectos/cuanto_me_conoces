@@ -1,10 +1,10 @@
 import flet as ft
-from servicios.bd_local_ser import BDLocal
 
 
 class SeleccionQuizView(ft.View):
     def __init__(
         self,
+        dict_quiz=None,
         on_nuevo=None,
         on_volver=None,
         on_editar=None,
@@ -13,8 +13,7 @@ class SeleccionQuizView(ft.View):
         self.on_nuevo = on_nuevo
         self.on_volver = on_volver
         self.on_editar = on_editar
-        bdl = BDLocal()
-        self.dic_quiz = bdl.mostrar_quiz_local()
+        self.dict_quiz = dict_quiz
 
         self._crear_controles()
         self._crear_vista()
@@ -70,7 +69,7 @@ class SeleccionQuizView(ft.View):
                                 controls=[self.lista_quiz],
                                 scroll=ft.ScrollMode.AUTO,
                                 expand=True,  # Obligatorio para que ocupe el espacio disponible
-                                height=500,
+                                # height=500,
                             ),
                             ft.Divider(),
                             self.btn_volver,
@@ -84,9 +83,11 @@ class SeleccionQuizView(ft.View):
 
         return [
             ft.Row(
+                key=f"quiz_row_{id}",
                 alignment=ft.MainAxisAlignment.START,
                 controls=[
                     ft.Card(
+                        key=f"quiz_card_{id}",
                         expand=True,
                         content=ft.Container(
                             width=400,
@@ -111,17 +112,27 @@ class SeleccionQuizView(ft.View):
                     ft.Button(
                         "Edit",
                         # expand_loose=True,
-                        data=id,
+                        data=quiz_id,
                         on_click=self._on_editar,
                     ),
                 ],
             )
-            for id, item in reversed(self.dic_quiz.items())
+            for quiz_id, item in reversed(self.dict_quiz.items())
         ]
 
+    def actualizar_datos(self, nuevos_quizzes: dict):
+        self.dict_quiz = nuevos_quizzes
+        self.lista_quiz.controls = self.crear_tarjetas()
+        # self.lista_quiz = ft.Column(controls=self.crear_tarjetas())
+        # self.lista_quiz.controls.clear()
+        # self.lista_quiz.controls.append(ft.Column(controls=self.crear_tarjetas()))
+        try:
+            if self.lista_quiz.page:
+                self.lista_quiz.update()
+        except RuntimeError:
+            pass
+
     def _on_editar(self, e):
-        # self.id_quiz = e.control.data
-        # print("idp7: ", self.id_quiz)
         if self.on_editar:
             self.on_editar(e)
 
@@ -130,7 +141,7 @@ class SeleccionQuizView(ft.View):
         if self.on_volver:
             self.on_volver()
 
-    def _on_nuevo(self):
+    def _on_nuevo(self, e):
         if self.on_nuevo:
             self.on_nuevo()
 

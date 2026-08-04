@@ -5,7 +5,7 @@ from vistas.p1_inicio_flet import InicioView
 from vistas.p2_crear_quiz import DatosQuizView
 from vistas.p3_crear_preguntas import CrearPreguntas
 from vistas.p4_crear_opciones import CrearOpciones
-from vistas.p5_editar_quiz import QuizEditor
+from vistas.p5_editar_quiz import EditorQuiz
 from vistas.p6_enviar_quiz import Enviar
 from vistas.p7_seleccion_quiz import SeleccionQuizView
 
@@ -13,6 +13,10 @@ from vistas.p7_seleccion_quiz import SeleccionQuizView
 class App:
     def __init__(self, page: ft.Page):
         self.page = page
+
+        self.bdl = BDLocal()
+        self.quizzes_cache = self.bdl.mostrar_quiz_local()  # todos los quiz en local
+        self.quiz_seleccionado_id = None
         self._configurar_page()  # titulo, tamaño ventana, padding, mode
         self._crear_views()  # contruir todas las vistas cons sus parametros
         self._mostrar_inicio()  # mostrar la primera vista
@@ -21,42 +25,26 @@ class App:
         self.page.title = "¿Cuánto me Conoces"
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.padding = 0
-        self.page.window_width = 200
-        self.page.window_height = 400
+        self.page.window.width = 350
+        self.page.window.height = 685
 
     # clase + señales (callbacks)
     def _crear_views(self):
         # p1
-        self.inicio_view = InicioView(
-            on_nuevo_quiz=self._seleccion_quiz,
-            # on_seguir_editando=self._continuar_editando,
-        )
-        # p2
-        # self.datos_quiz_view = DatosQuizView(
-        #    on_continuar=self._crear_preguntas,
-        #    on_volver=self._mostrar_inicio,
-        # )
+        self.inicio_view = InicioView(on_nuevo_quiz=self._seleccion_quiz)
+
         # p7
         self.seleccion_quiz_view = SeleccionQuizView(
+            dict_quiz=self.quizzes_cache,
             on_nuevo=self._abrir_crear_quiz,
             on_volver=self._mostrar_inicio,
             on_editar=self._mostrar_editor,
-            # dict_quiz=self._quiz_local,
-            # id_quiz="",
         )
 
         # p3
         self.crear_preguntas_view = CrearPreguntas(
             on_question_selected=self._abrir_editor_opciones,
             on_finish=self._mostrar_editor,
-            # on_back=self._seleccion_quiz,
-        )
-        # p5
-        self.editor_view = QuizEditor(
-            on_edit_question=self._edit_question,  # (flotante) es la misma pantalla que _abrir_editor_opciones, pero, con datos ya impresos
-            on_delete_question=self._delete_question,  # (accion en la misma pantalla)
-            on_enviar_quiz=self._enviar_quiz,  # flotante
-            on_back=self._seleccion_quiz,
         )
 
     # Navegación
@@ -71,57 +59,46 @@ class App:
         self._elegir_view(self.inicio_view)  # se elije mostrar p1
 
     # opción de ir a p7
-    def _seleccion_quiz(self, e):
-        if e.control.data:
-            self.id = e.control.data
-            bdl = BDLocal()
-            bdl.deshabilitar_quiz(self.id)
+    def _seleccion_quiz(self, e=None):
+        self.quizzes_cache = self.bdl.mostrar_quiz_local()
         self._elegir_view(self.seleccion_quiz_view)  # se elije mostrar p7
+        self.seleccion_quiz_view.actualizar_datos(
+            self.quizzes_cache
+        )  # primero elijo la pantalla, luego actuaizo.
 
-    # ir a p3
+    # ir a p7, desde la verntana flotante p2
     def _crear_quiz(self, *args, **kwargs):
         self.page.pop_dialog()
         self.datos_creacion_quiz = kwargs
         q = QuizM()
         datos_entrada = self.datos_creacion_quiz
-        # print(f"Datos para crear quiz -->{datos_entrada}")
-        # id =
         q.crear(datos=datos_entrada)
-        # print(f"ID Quiz -->{id}")
-        quiz_actualizados = q.lista_actual()
-        a = self.seleccion_quiz_view.crear_tarjetas()
-        self.seleccion_quiz_view.dic_quiz = quiz_actualizados
-        # print(f"Ultimo---->{self.seleccion_quiz_view.dic_quiz[id]}")
-        self.seleccion_quiz_view.lista_quiz.controls.clear()
-        self.seleccion_quiz_view.lista_quiz.controls.append(
-            ft.Column(controls=self.seleccion_quiz_view.crear_tarjetas())
-        )
-        self.seleccion_quiz_view.lista_quiz.update()
 
-    def _quiz_local():
-        bdl = BDLocal()
-        quiz_local = bdl.mostrar_quiz_local()
-        return quiz_local
+        self.quizzes_cache = q.lista_actual()
 
-        # self.seleccion_quiz_view.lista_quiz.conreolls.
-        # self.seleccion_quiz_view.lista_quiz.update()
-        # self._elegir_view(self.crear_preguntas_view)
-        # el id debe ser el unico quiz editable
+        self.seleccion_quiz_view.actualizar_datos(self.quizzes_cache)
 
     # ir a p5
-    def _mostrar_editor(self, e):
-        self.id = e.control.data
-        bdl = BDLocal()
-        bdl.habilitar_quiz(
-            self.id
-        )  # Esta función debe asegurarce de que solo 1 quizz sea "editable"
-        self._elegir_view(self.editor_view)
-        self.editor_view.add_question(
-            question_id=self.id,
-            question="¿Cuál es mi color favorito?",
-            options=["Azul", "Rojo", "Verde", "Negro"],
-            score=10,
+    def _mostrar_editor(
+        self,
+        e,
+    ):
+
+        self.quiz_seleccionado_id = e.control.data
+        quiz_data = self.quizzes_cache.get(self.quiz_seleccionado_id, {})
+
+        # p5
+        self.editor_view = EditorQuiz(
+            quiz_preguntas=quiz_data,
+            on_agregar=None,
+            on_editar=self._editar_pregunta,
+            on_eliminar_pregunta=self._eliminar_pregunta,
+            on_cambiar=self._seleccion_quiz,
+            on_eliminar_quiz=None,
+            on_terminar=None,
         )
+
+        self._elegir_view(self.editor_view)
 
     # ir a p4 (flotante):
     def _abrir_editor_opciones(self, pregunta, tipo):
@@ -164,11 +141,21 @@ class App:
         # agregar función para guardar las preguntas, en el unico quiz editable
 
     # Acciones de la p5
+    # def _cargar_quiz_habilitado(self):
+    # print("Ahora estoy pasando por aquí")
+    #    if self.id_habilitado:
+    #        id = self.id_habilitado
+    #        bdl = BDLocal()
+    #         return bdl.mostrar_quiz_habilitado(id)
+    #    else:
+    #        print("Aquí estoy")
+    #        return {}
+
     # abrir la p4, pero con los datos correspondientes
-    def _edit_question(self, question_id):
+    def _editar_pregunta(self, question_id):
         print(f"Editar {question_id}")
 
-    def _delete_question(self, question_id):
+    def _eliminar_pregunta(self, question_id):
         print(f"Eliminar {question_id}")
 
 
