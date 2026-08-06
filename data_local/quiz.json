@@ -4,7 +4,25 @@
         "nombre_evento": "Cerro Alegre",
         "comentario": "Prueba 1",
         "cantidad_preguntas": 5,
-        "data_preguntas": []
+        "data_preguntas": [
+            {
+                "id_pregunta": "97ff64d7-1d25-4ca8-921f-543b681ea718",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi color favorito?",
+                "opciones": {
+                    "1": "Rojo",
+                    "2": "verde",
+                    "3": "azul",
+                    "4": "morado"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": 0,
+                    "3": 0,
+                    "4": 2
+                }
+            }
+        ]
     },
     "2a43ab4e-11eb-4ba9-98cc-74c6436e3279": {
         "nombre_creador": "De prueba",
@@ -44,88 +62,118 @@
             }
         ]
     },
-    "fe784bca-2f2f-49b5-8218-3fae2920dd63": {
-        "nombre_creador": "Alejandro",
-        "nombre_evento": "Prueba 14",
-        "comentario": "Hola",
-        "cantidad_preguntas": 5
-    },
-    "8a2165a0-6087-47df-b2f5-bc30842ba507": {
-        "nombre_creador": "Ale",
-        "nombre_evento": "Prueba 15",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "aa13c39a-78ff-46db-9253-7d55c84b8336": {
+    "2a43ab4e-11eb-4ba9-98cc-74c6436e0000": {
         "nombre_creador": "Alma",
-        "nombre_evento": "Prueba 16",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "d4d625f3-e817-4712-95df-7cb12fdcbe74": {
-        "nombre_creador": "Val",
-        "nombre_evento": "Prueba 17",
-        "comentario": "",
-        "cantidad_preguntas": 7
-    },
-    "7bd656ab-3600-4a65-a3bc-7e83d6abe896": {
-        "nombre_creador": "Valeska Vera",
-        "nombre_evento": "Aniversario",
+        "nombre_evento": "Cumple",
         "comentario": "Hola",
-        "cantidad_preguntas": 10
+        "cantidad_preguntas": 5,
+        "data_preguntas": [
+            {
+                "id_pregunta": "3e49721d-040e-4c40-aed5-ec8a7c85e157",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi color favorito?",
+                "opciones": {
+                    "1": "a",
+                    "2": "b",
+                    "3": "c",
+                    "4": "d"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0
+                }
+            },
+            {
+                "id_pregunta": "eeed4b3b-52bd-4fda-835c-ed984d0a2bcc",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi lugar favorito?",
+                "opciones": {
+                    "1": "san",
+                    "2": "conce",
+                    "3": "Santi",
+                    "4": "Coli"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "e929e6a1-d62e-4ffe-b0d7-bba462bbeb5c",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi pelicula favorita?",
+                "opciones": {
+                    "1": "sw",
+                    "2": "coda",
+                    "3": "vengadores",
+                    "4": "fores"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "9e928461-e155-401c-8f08-807f9fff8b78",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi comida favorita?",
+                "opciones": {
+                    "1": "pizza",
+                    "2": "casuela",
+                    "3": "pollo frito",
+                    "4": "completo"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "a886422d-0699-4cc2-8c3a-65dcfdc67fc2",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi color favorito?",
+                "opciones": {
+                    "1": "a",
+                    "2": "b",
+                    "3": "c",
+                    "4": "d"
+                },
+                "puntaje": {
+                    "1": -5,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0
+                }
+            }
+        ]
     },
-    "0e5134f9-7815-4464-871b-0d7307c677f1": {
-        "nombre_creador": "Javi",
-        "nombre_evento": "Prueba 18",
+    "76eb5290-df8c-4a8b-983f-03f14ae38a01": {
+        "nombre_creador": "HOLA",
+        "nombre_evento": "Prueba 1",
         "comentario": "",
-        "cantidad_preguntas": 5
+        "cantidad_preguntas": 5,
+        "data_preguntas": []
     },
-    "170ba94c-4c27-409e-a33c-c7f1d944056c": {
-        "nombre_creador": "Feña",
-        "nombre_evento": "Prueba 19",
-        "comentario": "hola",
-        "cantidad_preguntas": 5
+    "cb781be7-9eab-4e32-a30b-00569092cb4e": {
+        "nombre_creador": "a",
+        "nombre_evento": "b",
+        "comentario": "a",
+        "cantidad_preguntas": 5,
+        "data_preguntas": []
     },
-    "6e3f82cc-20b8-400f-9548-05ee877ed71a": {
-        "nombre_creador": "Javiera",
-        "nombre_evento": "Prueba 20",
-        "comentario": "Hola",
-        "cantidad_preguntas": 5
-    },
-    "76ecbc6a-989f-45ce-8360-89ca92bdc6cd": {
-        "nombre_creador": "Alejandro",
-        "nombre_evento": "Prueba 21",
+    "713d8d0b-1ee0-4109-a20b-77a3f412f9ac": {
+        "nombre_creador": "hola",
+        "nombre_evento": "chao",
         "comentario": "",
-        "cantidad_preguntas": 10
-    },
-    "f86fa07f-7f62-4c9d-9a27-e12f519dcb0f": {
-        "nombre_creador": "Ale",
-        "nombre_evento": "Prueba 22",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "a81ee678-55ad-49f1-9f42-f8b478359f44": {
-        "nombre_creador": "Hola",
-        "nombre_evento": "Prueba 23",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "2819a5d3-0b2d-4ae3-91bc-736cc5eb8b15": {
-        "nombre_creador": "Javi",
-        "nombre_evento": "Prueba 24",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "2b0547b5-c869-43ae-86bb-ccf18686f001": {
-        "nombre_creador": "Hola",
-        "nombre_evento": "Prueba 25",
-        "comentario": "",
-        "cantidad_preguntas": 5
-    },
-    "2ffcba5b-9e4a-4c11-9107-76635c4105aa": {
-        "nombre_creador": "Hola",
-        "nombre_evento": "Prueba 26",
-        "comentario": "ja",
-        "cantidad_preguntas": 5
+        "cantidad_preguntas": 5,
+        "data_preguntas": []
     }
 }

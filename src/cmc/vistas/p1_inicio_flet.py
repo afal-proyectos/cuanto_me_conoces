@@ -1,5 +1,4 @@
 import flet as ft
-from textos.txt import TxInfoApp as tx
 
 
 class InicioView(ft.View):
@@ -8,14 +7,19 @@ class InicioView(ft.View):
         on_nuevo_quiz=None,
         on_seguir_editando=None,
         on_ver_ranking=None,
+        textos=None,
     ):
-
+        self.textos = textos
         self.on_nuevo_quiz = on_nuevo_quiz
         self.on_seguir_editando = on_seguir_editando
         self.on_ver_ranking = on_ver_ranking
 
+        self._crear_controles()
+        self._crear_vista()
+
+    def _crear_controles(self):
         self.ibl_titulo = ft.Text(
-            tx.nombre_app,
+            self.textos["nombre"],
             # padding=5,
             text_align=ft.TextAlign.CENTER,
             size=50,
@@ -51,9 +55,7 @@ class InicioView(ft.View):
             on_click=self._on_ver_ranking_click,
         )
 
-        # =============================
-        # Vista
-        # =============================
+    def _crear_vista(self):
         super().__init__(
             route="/",
             controls=[
@@ -79,7 +81,7 @@ class InicioView(ft.View):
     # Eventos privados:
     def _on_nuevo_quiz_click(self, e):
         if self.on_nuevo_quiz:
-            self.on_nuevo_quiz(e)
+            self.on_nuevo_quiz()
 
     def _on_seguir_editando_click(self, e):
         if self.on_seguir_editando:
@@ -91,6 +93,7 @@ class InicioView(ft.View):
 
 
 if __name__ == "__main__":
+    tex = {"nombre": "¿Cuánto me Conoces?"}
 
     def main(page: ft.Page):
 
@@ -98,6 +101,7 @@ if __name__ == "__main__":
         page.views.clear()
         page.views.append(
             InicioView(
+                textos=tex,
                 on_nuevo_quiz=lambda: print("Nuevo Quiz"),
                 on_seguir_editando=lambda: print("Seguir editando"),
                 on_ver_ranking=lambda: print("Ver el ranking y el código QR"),

@@ -5,78 +5,85 @@ class CrearOpciones(ft.AlertDialog):
     def __init__(
         self,
         tipo_pregunta=None,
-        question_text=None,
+        pregunta_text=None,
         on_save=None,
         on_cancel=None,
     ):
         super().__init__(
             modal=True,
-            # actions_alignment=ft.MainAxisAlignment.END,
         )
-
         self.on_save = on_save
         self.on_cancel = on_cancel
-
-        self._create_controls()
         self.tipo = tipo_pregunta
-        self.title = ft.Text(question_text)
-        self.content = self._build_content()
-        # self.actions = [self.btn_cancel, self.btn_save]
+        self.pregunta = pregunta_text
+        self._crear_controles()
+        self.content = self._crear_vista()
 
-    def _create_controls(self):
+    def _subtitulos(self, t):
+        if t == "multiple":
+            return "Selección Múltiple\n"
 
-        self.txt_option1 = ft.TextField(label="Opción 1")
-        self.txt_option2 = ft.TextField(label="Opción 2")
-        self.txt_option3 = ft.TextField(label="Opción 3")
-        self.txt_option4 = ft.TextField(label="Opción 4")
+    def _crear_controles(self):
+
+        self.title = ft.Text(
+            self.pregunta,
+            size=20,
+            align=ft.Alignment.CENTER,
+            weight=ft.FontWeight.BOLD,
+            theme_style=ft.TextStyle(color=ft.Colors.BLACK),
+        )
+        self.sub_title = ft.Text(self._subtitulos(self.tipo), align=ft.Alignment.CENTER)
+        self.txt_option1 = ft.TextField(expand=True, label="Opción 1")
+        self.txt_option2 = ft.TextField(expand=True, label="Opción 2")
+        self.txt_option3 = ft.TextField(expand=True, label="Opción 3")
+        self.txt_option4 = ft.TextField(expand=True, label="Opción 4")
 
         self.score1 = ft.Dropdown(
             label="Puntos",
-            expand=True,
+            expand_loose=True,
             value="0",
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score2 = ft.Dropdown(
             label="Puntos",
-            expand=True,
+            expand_loose=True,
             value="0",
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score3 = ft.Dropdown(
             label="Puntos",
-            expand=True,
+            expand_loose=True,
             value="0",
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score4 = ft.Dropdown(
             label="Puntos",
-            expand=True,
+            expand_loose=True,
             value="0",
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
 
         self.btn_save = ft.Button(
-            "Guardar",
+            "Listar",
             expand=True,
             on_click=self._on_save_click,
         )
 
         self.btn_cancel = ft.Button(
-            "Cancelar",
+            "Volver",
             expand=True,
             on_click=self._on_cancel_click,
         )
 
-    # =====================================================
-    # Layout
-    # =====================================================
+        # self
 
-    def _build_content(self):
+    def _crear_vista(self):
 
         return ft.Column(
             tight=True,
             expand=True,
             controls=[
+                self.sub_title,
                 ft.Row(controls=[self.txt_option1, self.score1]),
                 ft.Row(controls=[self.txt_option2, self.score2]),
                 ft.Row(controls=[self.txt_option3, self.score3]),
@@ -85,10 +92,6 @@ class CrearOpciones(ft.AlertDialog):
                 ft.Row(controls=[self.btn_cancel, self.btn_save]),
             ],
         )
-
-    # =====================================================
-    # API pública
-    # =====================================================
 
     def clear(self):
 
@@ -131,7 +134,7 @@ class CrearOpciones(ft.AlertDialog):
     # =====================================================
 
     def _on_save_click(self, e):
-        # print(f"prueba de tipo:{self.tipo}")
+
         if self.on_save:
             self.on_save(
                 tipo=self.tipo,
@@ -170,7 +173,8 @@ if __name__ == "__main__":
 
         # Instanciamos el diálogo
         dlg = CrearOpciones(
-            question_text="¿Cuál es tu lenguaje favorito?",
+            tipo_pregunta="multiple",
+            pregunta_text="¿Cuál es tu lenguaje favorito?",
             on_save=guardar_datos,
             on_cancel=cerrar_dialogo,
         )

@@ -1,21 +1,20 @@
 import flet as ft
-from textos.txt import TxPreguntas as tx
 
 
 class CrearPreguntas(ft.View):
     def __init__(
         self,
-        on_question_selected=None,
-        on_finish=None,
-        # on_back=None,
+        tex_pregunta=None,
+        on_selec_pregunta=None,
+        on_regresar=None,
     ):
+        self.on_select_pregunta = on_selec_pregunta
+        self.on_regresar = on_regresar
+        self.tex_pregunta = tex_pregunta
+        self._crear_controls()
+        self._crear_vista()
 
-        self.on_question_selected = on_question_selected
-        self.on_finish = on_finish
-        # self.on_back = on_back
-
-        self._create_controls()
-
+    def _crear_vista(self):
         super().__init__(
             route="/questions",
             controls=[
@@ -45,14 +44,13 @@ class CrearPreguntas(ft.View):
                             self.lista_preguntas,
                             ft.Divider(),
                             self.btn_finish,
-                            # self.btn_back,
                         ],
                     ),
                 )
             ],
         )
 
-    def _create_controls(self):
+    def _crear_controls(self):
 
         self.lbl_title = ft.Text(
             "Crear Pregunta",
@@ -107,71 +105,62 @@ class CrearPreguntas(ft.View):
             on_click=lambda e: self.cambiar_lista("btn_4"),
         )
         self.btn_finish = ft.Button(
-            "Terminar Quiz",
+            "Ver Quiz",
             on_click=self._on_finish_click,
         )
 
-        # self.btn_back = ft.Button(
-        #    "Volver",
-        #    on_click=self._on_back_click,
-        # )
-
     def cambiar_lista(self, clave_boton):
         self.tipo_pregunta = clave_boton
-        alternativas = tx.opciones.get(self.tipo_pregunta, [])
+        lista = self.tex_pregunta.get(self.tipo_pregunta, [])
         self.lista_preguntas.controls = [
             ft.ListTile(
-                title=ft.Text(text),
-                on_click=lambda e, t=text: self._on_question_click(
-                    t, self.tipo_pregunta
+                title=ft.Text(pregunta),
+                on_click=lambda e, t=pregunta: self._on_select_pregunta(
+                    e, t, self.tipo_pregunta
                 ),
             )
-            for text in alternativas
+            for pregunta in lista
         ]
         self.lista_preguntas.update()
 
-    # def clear_questions(self):
-    #    self.lst_questions.controls.clear()
-    #    self.update()
-    def _on_question_click(self, pregunta, tipo):
-        if self.on_question_selected:
-            self.on_question_selected(pregunta, tipo)
-            print(f"Seleccionado:{tipo}={pregunta}")
+    def _on_select_pregunta(self, e, pregunta, tipo):
+        if self.on_select_pregunta:
+            self.on_select_pregunta(pregunta, tipo)
 
     def _on_finish_click(self, e):
-        if self.on_finish:
-            self.on_finish()
-
-    # def _on_back_click(self, e):
-    #    if self.on_back:
-    #       self.on_back()
+        if self.on_regresar:
+            self.on_regresar(e)
 
 
 if __name__ == "__main__":
+    opciones = {
+        "multiple": [
+            "¿Cuál es mi color favorito?",
+            "¿Cuál es mi lugar favorito?",
+            "¿Cuál es mi pelicula favorita?",
+            "¿Cuál es mi comida favorita?",
+            "¿Cuál es mi superhéroe favorito?",
+        ],
+        "vof": [
+            "Amo a los animales",
+            "Me encantaría vivir en el campo",
+            "Mi comida favorita es la pizza",
+        ],
+    }
 
     def main(page: ft.Page):
 
         page.title = "Prueba QuestionSelectorView"
 
-        view = CrearPreguntas(
-            on_question_selected=lambda q: print(f"Pregunta {q}"),
-            on_finish=lambda: print("Terminar Quiz"),
-            # on_back=lambda: print("Volver"),
+        vista = CrearPreguntas(
+            on_selec_pregunta=lambda pregunta, tipo: print(
+                f"Tipo: {tipo}\nPregunta: {pregunta}"
+            ),
+            on_regresar=lambda: print("Terminar Quiz"),
+            tex_pregunta=opciones,
         )
 
-        page.views.append(view)
+        page.views.append(vista)
         page.update()
-        # Datos de prueba
-        ft.run(main)
 
-
-"""
-        view.add_question(1, "¿Cuál es mi color favorito?")
-        view.add_question(2, "¿Cuál es mi película favorita?")
-        view.add_question(3, "¿Cuál es mi comida favorita?")
-        view.add_question(4, "¿Cuál es mi canción favorita?")
-        view.add_question(5, "¿Cuál es mi equipo favorito?")
-        view.add_question(6, "¿Cuál es mi mascota favorita?")
-        view.add_question(7, "¿Cuál es mi bebida favorita?")
-        view.add_question(8, "¿Cuál es mi libro favorito?")
-"""
+    ft.run(main)

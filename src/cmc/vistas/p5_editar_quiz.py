@@ -4,7 +4,6 @@ import flet as ft
 class EditorQuiz(ft.View):
     def __init__(
         self,
-        # id_habilitado=None,
         quiz_preguntas=None,
         on_agregar=None,
         on_editar=None,
@@ -29,8 +28,9 @@ class EditorQuiz(ft.View):
         self._vista()
 
     # Metódo en contrucción, necesario para luego dibujar info en pantalla.
+    # aquí "desempacaré" toda la info que viene en self.data_quiz", para los fines de esta versión de la app, 0.2 aún no es necesario.
     def _info_quiz(self):
-        self.id_quiz = "pregunta[]"
+        self.nombre_creado = "pregunta[]"
 
     def _controles(self):
         self.cantidad_preguntas = ft.Text(self.contador_pregunta())
@@ -43,7 +43,10 @@ class EditorQuiz(ft.View):
         )
 
         self.agregar_nueva_pregunta = ft.Button(
-            "Agregar Pregunta", align=ft.Alignment.CENTER, on_click=self._on_agregar
+            "Agregar Pregunta",
+            align=ft.Alignment.CENTER,
+            on_click=self._on_agregar,
+            visible=not self._limite_alcanzado(),
         )
 
         self.editar_pregunta = ft.IconButton(
@@ -69,7 +72,6 @@ class EditorQuiz(ft.View):
             "Cambiar de Quiz",
             align=ft.Alignment.CENTER,
             expand=True,
-            # data=list(self.data_quiz)[0] if self.data_quiz else None,
             on_click=self._on_cambiar,
         )
 
@@ -80,7 +82,10 @@ class EditorQuiz(ft.View):
         )
 
         self.terminar = ft.Button(
-            "Terminar Quiz", align=ft.Alignment.CENTER, on_click=self._on_terminar
+            "Terminar Quiz",
+            align=ft.Alignment.CENTER,
+            on_click=self._on_terminar,
+            visible=self._limite_alcanzado(),
         )
 
     def _vista(self):
@@ -95,14 +100,13 @@ class EditorQuiz(ft.View):
                         self.lista_pregunta,
                         ft.Column(
                             controls=[self.agregar_nueva_pregunta, self.terminar],
-                            scroll=ft.ScrollMode.AUTO,
-                            expand=True,
                         ),
                         ft.Row(
                             vertical_alignment=ft.CrossAxisAlignment.END,
                             controls=[self.cambiar_quiz, self.eliminar_quiz],
                         ),
                     ],
+                    scroll=ft.ScrollMode.AUTO,
                     expand=True,
                 )
             ],
@@ -140,17 +144,23 @@ class EditorQuiz(ft.View):
                     )
                 ],
             )
-            # for dato in self.pregunta.values()
 
             lista.append(elemento)
 
         return lista
 
-    def contador_pregunta(self, total=10):  ########revisar desde aquí
+    def _limite_alcanzado(self):
+        preguntas = self.data_quiz.get("data_preguntas", [])
+        agre = len(preguntas)
+        total = self.data_quiz.get("cantidad_preguntas", 0)
+        return agre >= total
+
+    def contador_pregunta(self):
         preguntas = self.data_quiz.get("data_preguntas", [])
         agregadas = len(preguntas)
-        total_quiz = self.data_quiz.get("cantidad_preguntas", total)
+        total_quiz = self.data_quiz.get("cantidad_preguntas", 0)
         contador = f"Preguntas: {agregadas} / {total_quiz}"
+
         return contador
 
     def _agregar_opciones(self, opciones):
@@ -186,6 +196,17 @@ class EditorQuiz(ft.View):
     def _on_terminar(self, e):
         if self.on_terminar:
             self.on_terminar()
+
+    def actualiazr_botones(self):
+        limite = self._limite_alcanzado()
+        self.agregar_nueva_pregunta.visible = not limite
+        self.terminar.visible = limite
+        try:
+            if self.agregar_nueva_pregunta.page:
+                self.agregar_nueva_pregunta.update()
+                self.terminar.update()
+        except RuntimeError:
+            pass
 
 
 if __name__ == "__main__":
@@ -227,7 +248,7 @@ if __name__ == "__main__":
         page.theme_mode = ft.ThemeMode.LIGHT
 
         ventana = EditorQuiz(
-            quiz_preguntas=data,
+            quiz_preguntas=data["2a43ab4e-11eb-4ba9-98cc-74c6436e3279"],
             on_agregar=lambda: print("Agregar pregunta"),
             on_editar=lambda: print("editar Pregunta"),
             on_cambiar=lambda: print("Cambiar Quiz"),

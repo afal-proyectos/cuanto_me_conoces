@@ -5,7 +5,6 @@ from vistas.app import App
 
 
 def main(page: ft.Page):
-
     App(page)
 
 

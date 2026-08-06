@@ -82,35 +82,6 @@ class DatosQuizView(ft.AlertDialog):
             ],
         )
 
-        """    
-        super().__init__(
-            route="/datos",
-            controls=[
-                ft.Container(
-                    expand=True,
-                    alignment=ft.Alignment.CENTER,
-                    content=ft.Column(
-                        width=350,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        controls=[
-                            self.lbl_titulo,
-                            self.txt_nombre,
-                            self.txt_evento,
-                            self.txt_comentario,
-                            self.cmb_cantidad,
-                            ft.Row(
-                                controls=[
-                                    self.btn_continuar,
-                                    self.btn_volver,
-                                ]
-                            ),
-                        ],
-                    ),
-                )
-            ],
-        )
-    """
-
     def _validar_campos(self, e):
         nombre_ok = bool(self.txt_nombre.value and self.txt_nombre.value.strip())
         evento_ok = bool(self.txt_evento.value and self.txt_evento.value.strip())

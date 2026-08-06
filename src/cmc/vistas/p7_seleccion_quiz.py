@@ -57,7 +57,6 @@ class SeleccionQuizView(ft.View):
                     expand=True,
                     padding=2,
                     content=ft.Column(
-                        # scroll=ft.ScrollMode.AUTO,
                         expand=True,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         controls=[
@@ -69,7 +68,6 @@ class SeleccionQuizView(ft.View):
                                 controls=[self.lista_quiz],
                                 scroll=ft.ScrollMode.AUTO,
                                 expand=True,  # Obligatorio para que ocupe el espacio disponible
-                                # height=500,
                             ),
                             ft.Divider(),
                             self.btn_volver,
