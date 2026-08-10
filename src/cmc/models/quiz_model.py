@@ -8,7 +8,6 @@ class QuizM:
         self.bdl = BDLocal()
 
     def ordenar(self, idq, datos):
-        print("ordenando datos..")
         id = str(uuid.uuid4())
         opciones_ok = {
             1: datos["option1"],
@@ -48,6 +47,34 @@ class QuizM:
     def lista_actual(self):
         lista = self.bdl.mostrar_quiz_local()
         return lista
+
+    def eliminar_pregunta(self, id_quiz, id_pregunta):
+        self.bdl.eliminar_pregunta(id_quiz, id_pregunta)
+
+    def eliminar_quiz(self, id_quiz):
+        self.bdl.eliminar_quiz(id_quiz)
+
+    def actualizar_pregunta(self, idq, id_pregunta, datos):
+        opciones_ok = {
+            1: datos["option1"],
+            2: datos["option2"],
+            3: datos["option3"],
+            4: datos["option4"],
+        }
+        puntajes_ok = {
+            1: datos["score1"],
+            2: datos["score2"],
+            3: datos["score3"],
+            4: datos["score4"],
+        }
+        pregunta_ok = {
+            "id_pregunta": id_pregunta,
+            "tipo": datos["tipo"],
+            "pregunta": datos["pregunta"],
+            "opciones": opciones_ok,
+            "puntaje": puntajes_ok,
+        }
+        self.bdl.actualizar_pregunta(idq, id_pregunta, pregunta_ok)
 
 
 if __name__ == "__main__":

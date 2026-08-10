@@ -49,21 +49,6 @@ class EditorQuiz(ft.View):
             visible=not self._limite_alcanzado(),
         )
 
-        self.editar_pregunta = ft.IconButton(
-            icon=ft.Icons.EDIT,
-            tooltip="Editar",
-            align=ft.Alignment.CENTER,
-            expand=True,
-            on_click=self._on_editar,
-        )
-
-        self.eliminar_pregunta = ft.IconButton(
-            icon=ft.Icons.DELETE,
-            tooltip="Eliminar",
-            align=ft.Alignment.CENTER,
-            on_click=self._on_eliminar_pregunta,
-        )
-
         self.lista_pregunta = ft.Column(
             controls=self._agregar_pregunta()
         )  # "controls" es una lista de elementos.
@@ -93,21 +78,29 @@ class EditorQuiz(ft.View):
             route="/editor_quiz",
             padding=20,
             controls=[
-                ft.Column(
-                    controls=[
-                        self.titulo,
-                        self.cantidad_preguntas,
-                        self.lista_pregunta,
-                        ft.Column(
-                            controls=[self.agregar_nueva_pregunta, self.terminar],
-                        ),
-                        ft.Row(
-                            vertical_alignment=ft.CrossAxisAlignment.END,
-                            controls=[self.cambiar_quiz, self.eliminar_quiz],
-                        ),
-                    ],
-                    scroll=ft.ScrollMode.AUTO,
+                ft.Container(
                     expand=True,
+                    padding=2,
+                    content=ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        expand=True,
+                        controls=[
+                            self.titulo,
+                            self.cantidad_preguntas,
+                            ft.Column(
+                                scroll=ft.ScrollMode.AUTO,
+                                expand=True,
+                                controls=[self.lista_pregunta],
+                            ),
+                            ft.Column(
+                                controls=[self.agregar_nueva_pregunta, self.terminar],
+                            ),
+                            ft.Row(
+                                vertical_alignment=ft.CrossAxisAlignment.END,
+                                controls=[self.cambiar_quiz, self.eliminar_quiz],
+                            ),
+                        ],
+                    ),
                 )
             ],
         )
@@ -117,6 +110,18 @@ class EditorQuiz(ft.View):
         # acceso a la lista de preguntas del diccionario
         preguntas = self.data_quiz.get("data_preguntas", [])
         for dato in preguntas:
+            btn_editar_pregunta = ft.IconButton(
+                icon=ft.Icons.EDIT,
+                tooltip="Editar",
+                data=dato["id_pregunta"],
+                on_click=self._on_editar,
+            )
+            btn_eliminar_pregunta = ft.IconButton(
+                icon=ft.Icons.DELETE,
+                tooltip="Eliminar",
+                data=dato["id_pregunta"],
+                on_click=self._on_eliminar_pregunta,
+            )
             elemento = ft.ExpansionTile(
                 expanded=True,
                 title=ft.Text(dato["pregunta"]),
@@ -138,7 +143,10 @@ class EditorQuiz(ft.View):
                                 ],
                             ),
                             ft.Row(
-                                controls=[self.editar_pregunta, self.eliminar_pregunta],
+                                controls=[
+                                    btn_editar_pregunta,
+                                    btn_eliminar_pregunta,
+                                ],
                             ),
                         ]
                     )
@@ -175,11 +183,11 @@ class EditorQuiz(ft.View):
 
     def _on_editar(self, e):
         if self.on_editar:
-            self.on_editar()
+            self.on_editar(e.control.data)
 
     def _on_eliminar_pregunta(self, e):
         if self.on_eliminar_pregunta:
-            self.on_eliminar_pregunta()
+            self.on_eliminar_pregunta(e.control.data)
 
     def _on_eliminar_quiz(self, e):
         if self.on_eliminar_quiz:
@@ -188,10 +196,6 @@ class EditorQuiz(ft.View):
     def _on_cambiar(self, e):
         if self.on_cambiar:
             self.on_cambiar()
-
-    def _on_terminar(self, e):
-        if self.on_terminar:
-            self.on_terminar()
 
     def _on_terminar(self, e):
         if self.on_terminar:

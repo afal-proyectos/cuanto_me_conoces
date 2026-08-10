@@ -19,7 +19,7 @@
                     "1": 4,
                     "2": 0,
                     "3": 0,
-                    "4": 2
+                    "4": 4
                 }
             }
         ]
@@ -37,27 +37,31 @@
                 "opciones": {
                     "1": "Dragon Ball Z",
                     "2": "Demon Slayers",
-                    "3": "Bako no Hero"
+                    "3": "Bako no Hero",
+                    "4": "Naruto"
                 },
                 "puntaje": {
                     "1": 4,
                     "2": -2,
-                    "3": 0
+                    "3": 0,
+                    "4": 0
                 }
             },
             {
                 "id_pregunta": "2a43ab4e-11eb-4ba9-98cc-74c6436e3202",
-                "index": 1,
+                "tipo": null,
                 "pregunta": "¿Superhéroe favorito?",
                 "opciones": {
                     "1": "Batman",
                     "2": "Superman",
-                    "3": "WonderWoman"
+                    "3": "WonderWoman",
+                    "4": "X-Men"
                 },
                 "puntaje": {
-                    "1": 4,
+                    "1": 5,
                     "2": -2,
-                    "3": 0
+                    "3": 0,
+                    "4": -1
                 }
             }
         ]
@@ -69,14 +73,82 @@
         "cantidad_preguntas": 5,
         "data_preguntas": [
             {
-                "id_pregunta": "3e49721d-040e-4c40-aed5-ec8a7c85e157",
+                "id_pregunta": "17e2acc7-a3dd-4239-9fe3-fe8af59684dd",
                 "tipo": "multiple",
                 "pregunta": "¿Cuál es mi color favorito?",
                 "opciones": {
-                    "1": "a",
-                    "2": "b",
-                    "3": "c",
-                    "4": "d"
+                    "1": "Rojo",
+                    "2": "Verde",
+                    "3": "Azul",
+                    "4": "Amarillo"
+                },
+                "puntaje": {
+                    "1": 2,
+                    "2": 0,
+                    "3": 0,
+                    "4": -2
+                }
+            },
+            {
+                "id_pregunta": "6fb519db-6766-4f25-bcc5-04cbfe38c9de",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi lugar favorito?",
+                "opciones": {
+                    "1": "1",
+                    "2": "2",
+                    "3": "3",
+                    "4": "4"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": 0,
+                    "3": -2,
+                    "4": 0
+                }
+            },
+            {
+                "id_pregunta": "9fa927a0-6165-455a-9d88-e7c1d9898f8a",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi comida favorita?",
+                "opciones": {
+                    "1": "Casuela",
+                    "2": "Papas",
+                    "3": "Pollo",
+                    "4": "Pizza"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "1282ebf0-b1ed-484e-b258-32d613db7096",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi pelicula favorita?",
+                "opciones": {
+                    "1": "star",
+                    "2": "coda",
+                    "3": "el señor de los anillos",
+                    "4": "top gun"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "734d5b07-eb8f-476c-935f-bb11317ea2bc",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi superhéroe favorito?",
+                "opciones": {
+                    "1": "batman",
+                    "2": "superman",
+                    "3": "wonder woman",
+                    "4": "x men"
                 },
                 "puntaje": {
                     "1": 4,
@@ -84,96 +156,7 @@
                     "3": 0,
                     "4": 0
                 }
-            },
-            {
-                "id_pregunta": "eeed4b3b-52bd-4fda-835c-ed984d0a2bcc",
-                "tipo": "multiple",
-                "pregunta": "¿Cuál es mi lugar favorito?",
-                "opciones": {
-                    "1": "san",
-                    "2": "conce",
-                    "3": "Santi",
-                    "4": "Coli"
-                },
-                "puntaje": {
-                    "1": 0,
-                    "2": 0,
-                    "3": 0,
-                    "4": 4
-                }
-            },
-            {
-                "id_pregunta": "e929e6a1-d62e-4ffe-b0d7-bba462bbeb5c",
-                "tipo": "multiple",
-                "pregunta": "¿Cuál es mi pelicula favorita?",
-                "opciones": {
-                    "1": "sw",
-                    "2": "coda",
-                    "3": "vengadores",
-                    "4": "fores"
-                },
-                "puntaje": {
-                    "1": 0,
-                    "2": 0,
-                    "3": 0,
-                    "4": 4
-                }
-            },
-            {
-                "id_pregunta": "9e928461-e155-401c-8f08-807f9fff8b78",
-                "tipo": "multiple",
-                "pregunta": "¿Cuál es mi comida favorita?",
-                "opciones": {
-                    "1": "pizza",
-                    "2": "casuela",
-                    "3": "pollo frito",
-                    "4": "completo"
-                },
-                "puntaje": {
-                    "1": 0,
-                    "2": 0,
-                    "3": 0,
-                    "4": 4
-                }
-            },
-            {
-                "id_pregunta": "a886422d-0699-4cc2-8c3a-65dcfdc67fc2",
-                "tipo": "multiple",
-                "pregunta": "¿Cuál es mi color favorito?",
-                "opciones": {
-                    "1": "a",
-                    "2": "b",
-                    "3": "c",
-                    "4": "d"
-                },
-                "puntaje": {
-                    "1": -5,
-                    "2": 0,
-                    "3": 0,
-                    "4": 0
-                }
             }
         ]
-    },
-    "76eb5290-df8c-4a8b-983f-03f14ae38a01": {
-        "nombre_creador": "HOLA",
-        "nombre_evento": "Prueba 1",
-        "comentario": "",
-        "cantidad_preguntas": 5,
-        "data_preguntas": []
-    },
-    "cb781be7-9eab-4e32-a30b-00569092cb4e": {
-        "nombre_creador": "a",
-        "nombre_evento": "b",
-        "comentario": "a",
-        "cantidad_preguntas": 5,
-        "data_preguntas": []
-    },
-    "713d8d0b-1ee0-4109-a20b-77a3f412f9ac": {
-        "nombre_creador": "hola",
-        "nombre_evento": "chao",
-        "comentario": "",
-        "cantidad_preguntas": 5,
-        "data_preguntas": []
     }
 }

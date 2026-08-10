@@ -66,15 +66,76 @@ class BDLocal:
         preguntas_lista.append(pregunta)  # la lista con preguntas se actualiza
         quiz_actualizar["data_preguntas"] = preguntas_lista
         quiz_local[id] = quiz_actualizar
-        # quiz_local.update(quiz_actualizar)  # <---error, se agrega dos veces el quiz
-        # print("Todos lo quises locales", quiz_local)
 
         try:
             with open(self.local, "w", encoding="utf-8") as archivo:
                 json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
         except FileNotFoundError as e:
             print(f"Error al guardar el Quiz: {e}")
-        print(f"Quiz {id} -->Actualizado")
+        print(f"Quiz {id} -->Actualizado con la ultima pregunta")
+
+    def eliminar_pregunta(self, id_quiz, id_pregunta):
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                quiz_local = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay datos guardados")
+            return
+
+        quiz = quiz_local.get(id_quiz)
+        if not quiz:
+            return
+
+        preguntas = quiz.get("data_preguntas", [])
+        quiz["data_preguntas"] = [
+            p for p in preguntas if p["id_pregunta"] != id_pregunta
+        ]
+
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al guardar el Quiz: {e}")
+
+    def eliminar_quiz(self, id_quiz):
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                quiz_local = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay datos guardados")
+            return
+
+        quiz_local.pop(id_quiz, None)
+
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al guardar el Quiz: {e}")
+
+    def actualizar_pregunta(self, id_quiz, id_pregunta, pregunta_actualizada):
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                quiz_local = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay datos guardados")
+            return
+
+        quiz = quiz_local.get(id_quiz)
+        if not quiz:
+            return
+
+        preguntas = quiz.get("data_preguntas", [])
+        for i, p in enumerate(preguntas):
+            if p["id_pregunta"] == id_pregunta:
+                preguntas[i] = pregunta_actualizada  # reemplaza manteniendo la posición
+                break
+
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al guardar el Quiz: {e}")
 
 
 if __name__ == "__main__":

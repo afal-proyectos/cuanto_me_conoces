@@ -6,6 +6,8 @@ class CrearOpciones(ft.AlertDialog):
         self,
         tipo_pregunta=None,
         pregunta_text=None,
+        id_pregunta=None,  # None = pregunta nueva; con valor = se está editando
+        valores_iniciales=None,  # dict -> "opciones" : "puntaje", solo si se edita
         on_save=None,
         on_cancel=None,
     ):
@@ -16,15 +18,23 @@ class CrearOpciones(ft.AlertDialog):
         self.on_cancel = on_cancel
         self.tipo = tipo_pregunta
         self.pregunta = pregunta_text
+        self.id_pregunta = id_pregunta
+        # dic vacio en caso que sea una pregunta nueva
+        self.valores_iniciales = valores_iniciales or {}
         self._crear_controles()
         self.content = self._crear_vista()
+
+    def _valor_opcion(self, n):
+        return self.valores_iniciales.get("opciones", {}).get(str(n), "")
+
+    def _valor_puntaje(self, n):
+        return str(self.valores_iniciales.get("puntaje", {}).get(str(n), 0))
 
     def _subtitulos(self, t):
         if t == "multiple":
             return "Selección Múltiple\n"
 
     def _crear_controles(self):
-
         self.title = ft.Text(
             self.pregunta,
             size=20,
@@ -33,33 +43,42 @@ class CrearOpciones(ft.AlertDialog):
             theme_style=ft.TextStyle(color=ft.Colors.BLACK),
         )
         self.sub_title = ft.Text(self._subtitulos(self.tipo), align=ft.Alignment.CENTER)
-        self.txt_option1 = ft.TextField(expand=True, label="Opción 1")
-        self.txt_option2 = ft.TextField(expand=True, label="Opción 2")
-        self.txt_option3 = ft.TextField(expand=True, label="Opción 3")
-        self.txt_option4 = ft.TextField(expand=True, label="Opción 4")
+
+        self.txt_option1 = ft.TextField(
+            expand=True, label="Opción 1", value=self._valor_opcion(1)
+        )
+        self.txt_option2 = ft.TextField(
+            expand=True, label="Opción 2", value=self._valor_opcion(2)
+        )
+        self.txt_option3 = ft.TextField(
+            expand=True, label="Opción 3", value=self._valor_opcion(3)
+        )
+        self.txt_option4 = ft.TextField(
+            expand=True, label="Opción 4", value=self._valor_opcion(4)
+        )
 
         self.score1 = ft.Dropdown(
             label="Puntos",
-            expand_loose=True,
-            value="0",
+            expand=True,
+            value=self._valor_puntaje(1),
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score2 = ft.Dropdown(
             label="Puntos",
-            expand_loose=True,
-            value="0",
+            expand=True,
+            value=self._valor_puntaje(2),
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score3 = ft.Dropdown(
             label="Puntos",
-            expand_loose=True,
-            value="0",
+            expand=True,
+            value=self._valor_puntaje(3),
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
         self.score4 = ft.Dropdown(
             label="Puntos",
-            expand_loose=True,
-            value="0",
+            expand=True,
+            value=self._valor_puntaje(4),
             options=[ft.dropdown.Option(str(i)) for i in range(-5, 6)],
         )
 
@@ -75,10 +94,7 @@ class CrearOpciones(ft.AlertDialog):
             on_click=self._on_cancel_click,
         )
 
-        # self
-
     def _crear_vista(self):
-
         return ft.Column(
             tight=True,
             expand=True,
@@ -129,14 +145,10 @@ class CrearOpciones(ft.AlertDialog):
 
         self.update()
 
-    # =====================================================
-    # Eventos
-    # =====================================================
-
     def _on_save_click(self, e):
-
         if self.on_save:
             self.on_save(
+                id_pregunta=self.id_pregunta,
                 tipo=self.tipo,
                 pregunta=self.title.value,
                 option1=self.txt_option1.value,
@@ -150,7 +162,6 @@ class CrearOpciones(ft.AlertDialog):
             )
 
     def _on_cancel_click(self, e):
-
         if self.on_cancel:
             self.on_cancel()
 

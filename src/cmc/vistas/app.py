@@ -1,4 +1,5 @@
 import flet as ft
+import time
 from models.quiz_model import QuizM
 from servicios.bd_local_ser import BDLocal
 from textos.txt import TxtApp
@@ -95,8 +96,8 @@ class App:
             on_editar=self._editar_pregunta,
             on_eliminar_pregunta=self._eliminar_pregunta,
             on_cambiar=self._seleccion_quiz,
-            on_eliminar_quiz=None,
-            on_terminar=None,
+            on_eliminar_quiz=self._eliminar_quiz,
+            on_terminar=self._enviar_quiz,
         )
 
         self._elegir_view(self.editor_view)
@@ -112,6 +113,8 @@ class App:
             pregunta_text=pregunta,
             on_save=self._save_question,
             on_cancel=lambda: self.page.pop_dialog(),
+            id_pregunta=None,
+            valores_iniciales=None,
         )
         self.page.show_dialog(dialog)
 
@@ -141,20 +144,55 @@ class App:
 
     # guardar en p4
     def _save_question(self, **data):
-
-        self.q.ordenar(self.quiz_seleccionado_id, data)
-        self.quizzes_cache = (
-            self.q.lista_actual()
-        )  # refrescar la caché para que siempre se actual.
+        id_pregunta = data.pop("id_pregunta", None)
         self.page.pop_dialog()
-        # agregar función para guardar las preguntas, en el unico quiz editable
+        self.page.update()
+        if id_pregunta:
+            print("Guardar pregunta con id...")
+            self.q.actualizar_pregunta(self.quiz_seleccionado_id, id_pregunta, data)
+            self.quizzes_cache = self.q.lista_actual()
+            # time.sleep(0.9)
+            self.editor_view.update()
+            # self._abrir_editor()  # refresca p5 con los datos ya editados
+
+        else:
+            self.q.ordenar(self.quiz_seleccionado_id, data)
+            self.quizzes_cache = self.q.lista_actual()
 
     # abrir la p4, pero con los datos correspondientes
     def _editar_pregunta(self, question_id):
-        print(f"Editar {question_id}")
+        quiz = self.quizzes_cache.get(self.quiz_seleccionado_id, {})
+        preguntas = quiz.get("data_preguntas", [])
+        pregunta_data = next(
+            (p for p in preguntas if p["id_pregunta"] == question_id), None
+        )
+        if not pregunta_data:
+            return
+
+        dialog = CrearOpciones(
+            tipo_pregunta=pregunta_data.get("tipo"),
+            pregunta_text=pregunta_data.get("pregunta"),
+            id_pregunta=question_id,
+            valores_iniciales=pregunta_data,
+            on_save=self._save_question,
+            on_cancel=lambda: self.page.pop_dialog(),
+        )
+        self.page.show_dialog(dialog)
 
     def _eliminar_pregunta(self, question_id):
-        print(f"Eliminar {question_id}")
+        self.q.eliminar_pregunta(self.quiz_seleccionado_id, question_id)
+        self.quizzes_cache = self.q.lista_actual()
+        # se abre, aunque estemos en la mima pantalla, para recargarla con info actualizada
+        self._abrir_editor()
+
+    def _eliminar_quiz(self):
+        if not self.quiz_seleccionado_id:
+            return
+        self.q.eliminar_quiz(self.quiz_seleccionado_id)
+        self.quiz_seleccionado_id = None  # actualiza la memoria volatil del programa
+        self.quizzes_cache = self.q.lista_actual()
+        # abrimos una pantalla para no quedar en la "nada"
+        self._seleccion_quiz()
 
 
 if __name__ == "__main__":

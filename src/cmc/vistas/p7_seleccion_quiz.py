@@ -78,7 +78,6 @@ class SeleccionQuizView(ft.View):
         )
 
     def crear_tarjetas(self):
-
         return [
             ft.Row(
                 key=f"quiz_row_{id}",
@@ -109,7 +108,6 @@ class SeleccionQuizView(ft.View):
                     ),
                     ft.Button(
                         "Edit",
-                        # expand_loose=True,
                         data=quiz_id,
                         on_click=self._on_editar,
                     ),
@@ -121,9 +119,6 @@ class SeleccionQuizView(ft.View):
     def actualizar_datos(self, nuevos_quizzes: dict):
         self.dict_quiz = nuevos_quizzes
         self.lista_quiz.controls = self.crear_tarjetas()
-        # self.lista_quiz = ft.Column(controls=self.crear_tarjetas())
-        # self.lista_quiz.controls.clear()
-        # self.lista_quiz.controls.append(ft.Column(controls=self.crear_tarjetas()))
         try:
             if self.lista_quiz.page:
                 self.lista_quiz.update()
@@ -135,7 +130,6 @@ class SeleccionQuizView(ft.View):
             self.on_editar(e)
 
     def _on_volver(self, e):
-        # print("volver")
         if self.on_volver:
             self.on_volver()
 
