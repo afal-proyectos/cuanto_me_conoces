@@ -5,13 +5,13 @@ class InicioView(ft.View):
     def __init__(
         self,
         on_nuevo_quiz=None,
-        on_seguir_editando=None,
+        on_quiz_terminados=None,
         on_ver_ranking=None,
         textos=None,
     ):
         self.textos = textos
         self.on_nuevo_quiz = on_nuevo_quiz
-        self.on_seguir_editando = on_seguir_editando
+        self.on_seguir_editando = on_quiz_terminados
         self.on_ver_ranking = on_ver_ranking
 
         self._crear_controles()

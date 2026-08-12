@@ -4,10 +4,10 @@ import flet as ft
 class CrearOpciones(ft.AlertDialog):
     def __init__(
         self,
-        tipo_pregunta=None,
-        pregunta_text=None,
-        id_pregunta=None,  # None = pregunta nueva; con valor = se está editando
-        valores_iniciales=None,  # dict -> "opciones" : "puntaje", solo si se edita
+        # tipo_pregunta=None,
+        # pregunta_text=None,
+        # id_pregunta=None,  # None = pregunta nueva; con valor = se está editando
+        # valores_iniciales=None,  # dict -> "opciones" : "puntaje", solo si se edita
         on_save=None,
         on_cancel=None,
     ):
@@ -16,11 +16,11 @@ class CrearOpciones(ft.AlertDialog):
         )
         self.on_save = on_save
         self.on_cancel = on_cancel
-        self.tipo = tipo_pregunta
-        self.pregunta = pregunta_text
-        self.id_pregunta = id_pregunta
+        self.tipo = None
+        self.pregunta = None
+        self.id_pregunta = None
         # dic vacio en caso que sea una pregunta nueva
-        self.valores_iniciales = valores_iniciales or {}
+        self.valores_iniciales = {}
         self._crear_controles()
         self.content = self._crear_vista()
 
@@ -109,6 +109,35 @@ class CrearOpciones(ft.AlertDialog):
             ],
         )
 
+    def configurar(
+        self, tipo_pregunta, pregunta_text, id_pregunta=None, valores_iniciales=None
+    ):
+        self.tipo = tipo_pregunta
+        self.pregunta = pregunta_text
+        self.id_pregunta = id_pregunta
+        valores = valores_iniciales or {}
+
+        self.title.value = pregunta_text
+        self.sub_title.value = self._subtitulos(tipo_pregunta)
+
+        self.load_question(
+            option1=valores.get("opciones", {}).get("1", ""),
+            option2=valores.get("opciones", {}).get("2", ""),
+            option3=valores.get("opciones", {}).get("3", ""),
+            option4=valores.get("opciones", {}).get("4", ""),
+            score1=valores.get("puntaje", {}).get("1", 0),
+            score2=valores.get("puntaje", {}).get("2", 0),
+            score3=valores.get("puntaje", {}).get("3", 0),
+            score4=valores.get("puntaje", {}).get("4", 0),
+        )
+
+    def _update_seguro(self):
+        try:
+            if self.page:
+                self.update()
+        except RuntimeError:
+            pass
+
     def clear(self):
 
         self.txt_option1.value = ""
@@ -120,7 +149,7 @@ class CrearOpciones(ft.AlertDialog):
         self.score3.value = "0"
         self.score4.value = "0"
 
-        self.update()
+        self._update_seguro()
 
     def load_question(
         self,
@@ -143,7 +172,7 @@ class CrearOpciones(ft.AlertDialog):
         self.score3.value = str(score3)
         self.score4.value = str(score4)
 
-        self.update()
+        self._update_seguro()
 
     def _on_save_click(self, e):
         if self.on_save:

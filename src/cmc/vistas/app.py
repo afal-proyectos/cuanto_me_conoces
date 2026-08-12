@@ -1,5 +1,4 @@
 import flet as ft
-import time
 from models.quiz_model import QuizM
 from servicios.bd_local_ser import BDLocal
 from textos.txt import TxtApp
@@ -10,6 +9,7 @@ from vistas.p4_crear_opciones import CrearOpciones
 from vistas.p5_editar_quiz import EditorQuiz
 from vistas.p6_enviar_quiz import Enviar
 from vistas.p7_seleccion_quiz import SeleccionQuizView
+from vistas.p8_quiz_terminados import QuizTerminados
 
 
 class App:
@@ -35,7 +35,10 @@ class App:
     def _crear_views(self):
         # p1
         self.inicio_view = InicioView(
-            on_nuevo_quiz=self._seleccion_quiz, textos=self.tx.info()
+            on_nuevo_quiz=self._seleccion_quiz,
+            on_quiz_terminados=self._abrir_quiz_terminados_view,
+            on_ver_ranking=None,
+            textos=self.tx.info(),
         )
 
         # p7
@@ -52,6 +55,19 @@ class App:
             on_selec_pregunta=self._abrir_editor_opciones,
             on_regresar=self._abrir_editor,
         )
+        # p8
+        self.quiz_terminados = QuizTerminados(
+            on_comenzar=None,
+            on_regresar=self._mostrar_inicio,
+            on_revisar=None,
+            on_seguir_editando=None,
+            quiz_terminados=self._quiz_terminados(),
+        )
+        # p4 — una sola instancia reutilizada para crear y editar preguntas
+        self.dialog_opciones = CrearOpciones(
+            on_save=self._save_question,
+            on_cancel=lambda: self.page.pop_dialog(),
+        )
 
     # Navegación
     # Seleccionar ventana : parametro, la ventana, limpia, agrega y actualiza
@@ -67,17 +83,16 @@ class App:
     # opción de ir a p7
     def _seleccion_quiz(self, e=None):
         self.quizzes_cache = self.bdl.mostrar_quiz_local()
-        self._elegir_view(self.seleccion_quiz_view)  # se elije mostrar p7
-        self.seleccion_quiz_view.actualizar_datos(
-            self.quizzes_cache
-        )  # primero elijo la pantalla, luego actuaizo.
+        self._elegir_view(self.seleccion_quiz_view)
+        self.seleccion_quiz_view.actualizar_datos(self.quizzes_cache)
 
     # ir a p7, desde la verntana flotante p2
     def _crear_quiz(self, *args, **kwargs):
         self.page.pop_dialog()
         datos_entrada = kwargs
         self.q.crear(datos=datos_entrada)
-        self.quizzes_cache = self.q.lista_actual()
+        self.quizzes_cache = self.bdl.mostrar_quiz_local()
+        # self.quizzes_cache = self.q.lista_actual()
         self.seleccion_quiz_view.actualizar_datos(self.quizzes_cache)
 
     # ir a p5
@@ -106,17 +121,21 @@ class App:
     def _arbir_crear_preguntas_view(self):
         self._elegir_view(self.crear_preguntas_view)
 
+    # ir a p8 (quiz terminados)
+    def _abrir_quiz_terminados_view(self):
+        self._elegir_view(self.quiz_terminados)
+
     # ir a p4 (flotante):
     def _abrir_editor_opciones(self, pregunta, tipo):
-        dialog = CrearOpciones(
+        self.dialog_opciones.configurar(
             tipo_pregunta=tipo,
             pregunta_text=pregunta,
-            on_save=self._save_question,
-            on_cancel=lambda: self.page.pop_dialog(),
+            # on_save=self._save_question,
+            # on_cancel=lambda: self.page.pop_dialog(),
             id_pregunta=None,
             valores_iniciales=None,
         )
-        self.page.show_dialog(dialog)
+        self.page.show_dialog(self.dialog_opciones)
 
     # ir a p2 (flotante)
     def _abrir_crear_quiz(self):
@@ -138,9 +157,10 @@ class App:
 
     # Acción al enviar el quiz en p6
     def _terminar_quiz(self):
-        print("crear quiz")
         self.page.pop_dialog()
-        # mandar a la pantalla (aún no creada), de quiz terminados.
+        print("Quiz terminado")
+        self.q.guardar_quiz_terminado(idq=self.quiz_seleccionado_id)
+        self._elegir_view(self.inicio_view)
 
     # guardar en p4
     def _save_question(self, **data):
@@ -153,7 +173,7 @@ class App:
             self.quizzes_cache = self.q.lista_actual()
             # time.sleep(0.9)
             self.editor_view.update()
-            # self._abrir_editor()  # refresca p5 con los datos ya editados
+            self._abrir_editor()  # refresca p5 con los datos ya editados
 
         else:
             self.q.ordenar(self.quiz_seleccionado_id, data)
@@ -169,15 +189,15 @@ class App:
         if not pregunta_data:
             return
 
-        dialog = CrearOpciones(
+        self.dialog_opciones.configurar(
             tipo_pregunta=pregunta_data.get("tipo"),
             pregunta_text=pregunta_data.get("pregunta"),
             id_pregunta=question_id,
             valores_iniciales=pregunta_data,
-            on_save=self._save_question,
-            on_cancel=lambda: self.page.pop_dialog(),
+            # on_save=self._save_question,
+            # on_cancel=lambda: self.page.pop_dialog(),
         )
-        self.page.show_dialog(dialog)
+        self.page.show_dialog(self.dialog_opciones)
 
     def _eliminar_pregunta(self, question_id):
         self.q.eliminar_pregunta(self.quiz_seleccionado_id, question_id)
@@ -193,6 +213,11 @@ class App:
         self.quizzes_cache = self.q.lista_actual()
         # abrimos una pantalla para no quedar en la "nada"
         self._seleccion_quiz()
+
+    def _quiz_terminados(self):
+        lista_quiz_terminados = {}
+        lista_quiz_terminados = self.bdl.mostrar_quiz_terminados()
+        return lista_quiz_terminados
 
 
 if __name__ == "__main__":

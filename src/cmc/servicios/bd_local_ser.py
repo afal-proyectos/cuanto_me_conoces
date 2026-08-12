@@ -7,8 +7,12 @@ class BDLocal:
     def __init__(self):
         # Ruta base: carpeta raíz del proyecto
         self.base_dir = Path(__file__).resolve().parents[3]
-
         self.local = self.base_dir / "data_local" / "quiz.json"
+
+        self.base_terminados_dir = Path(__file__).resolve().parents[3]
+        self.local_terminados = (
+            self.base_terminados_dir / "data_local" / "quiz_terminados.json"
+        )
 
     def guardar_quiz_local(self, id_quiz_actual: str, quiz_actual: dict):
         self.id = id_quiz_actual
@@ -41,6 +45,7 @@ class BDLocal:
 
         return quiz_local
 
+    # revisar esta función, es posible que no se utilice en la siguiente versión
     def mostrar_quiz_habilitado(self, id):
         if id:
             try:
@@ -136,6 +141,52 @@ class BDLocal:
                 json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
         except FileNotFoundError as e:
             print(f"Error al guardar el Quiz: {e}")
+
+    def terminar_quiz(self, id_quiz):
+        idq = id_quiz
+        quiz_terminado = {}
+        quiz_local = {}
+        quiz_local_terminados = {}
+        try:
+            with open(self.local, "r", encoding="utf-8") as archivo:
+                contenido = archivo.read()
+                if contenido:
+                    quiz_local = json.loads(contenido)
+        except FileNotFoundError as e:
+            print(f"Error al obtener quizz: {e}")
+
+        quiz_terminado[idq] = quiz_local.pop(idq, None)
+
+        try:
+            with open(self.local, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al sobrescribir en memoria local: {e}")
+        # guardar el quiz en el archivo de terminados
+        try:
+            with open(self.local_terminados, "r", encoding="utf-8") as archivo:
+                contenido_t = archivo.read()
+                if contenido_t:
+                    quiz_local_terminados = json.loads(contenido)
+        except FileNotFoundError as e:
+            print(f"Error al obtener quizz terminados: {e}")
+
+        quiz_local_terminados.update(quiz_terminado)
+
+        try:
+            with open(self.local_terminados, "w", encoding="utf-8") as archivo:
+                json.dump(quiz_local_terminados, archivo, indent=4, ensure_ascii=False)
+        except FileNotFoundError as e:
+            print(f"Error al sobreescribir los quizz terminados: {e}")
+
+    def mostrar_quiz_terminados(self):
+        try:
+            with open(self.local_terminados, "r", encoding="utf-8") as archivo:
+                quiz_terminados = json.load(archivo)
+        except FileNotFoundError:
+            print("No hay Quiz terminados")
+
+        return quiz_terminados
 
 
 if __name__ == "__main__":

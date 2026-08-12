@@ -76,6 +76,9 @@ class QuizM:
         }
         self.bdl.actualizar_pregunta(idq, id_pregunta, pregunta_ok)
 
+    def guardar_quiz_terminado(self, idq):
+        self.bdl.terminar_quiz(idq)
+
 
 if __name__ == "__main__":
     QuizM.ordenar()

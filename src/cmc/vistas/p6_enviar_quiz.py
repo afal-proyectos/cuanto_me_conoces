@@ -20,10 +20,6 @@ class Enviar(ft.AlertDialog):
         self.title = ft.Text(advertencia)
         self.content = self._build_content()
 
-    # =====================================================
-    # Controles
-    # =====================================================
-
     def _create_controls(self):
 
         self.advertencia = ft.Text("¿Estás Seguro de enviar el quizz?")
@@ -83,14 +79,10 @@ if __name__ == "__main__":
             page.pop_dialog()
             page.update()
 
-        def guardar_datos(**kwargs):
-            print(f"Enviar: {kwargs}")
-            cerrar_dialogo()
-
         # Instanciamos el diálogo
         dlg = Enviar(
-            question_text="¡Atención!",
-            on_save=guardar_datos,
+            advertencia="¡Atención!",
+            on_save=lambda: print("guardar datos"),
             on_cancel=cerrar_dialogo,
         )
 

@@ -1,0 +1,95 @@
+{
+    "b7b52d35-fcd0-41ef-8d20-d74a1aebd16d": {
+        "nombre_creador": "Alejandro",
+        "nombre_evento": "Cerro Alegre",
+        "comentario": "Prueba 1",
+        "cantidad_preguntas": 5,
+        "data_preguntas": [
+            {
+                "id_pregunta": "97ff64d7-1d25-4ca8-921f-543b681ea718",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi color favorito?",
+                "opciones": {
+                    "1": "Rojo",
+                    "2": "verde",
+                    "3": "azul",
+                    "4": "morado"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "f4293458-2767-4f2c-a10b-ad3e57761e8f",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi color favorito?",
+                "opciones": {
+                    "1": "Rojo",
+                    "2": "Verde",
+                    "3": "Azul",
+                    "4": "Amarillo"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 4
+                }
+            },
+            {
+                "id_pregunta": "97b078ff-cc8e-4868-aab0-a6e51966813b",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi lugar favorito?",
+                "opciones": {
+                    "1": "Santiago",
+                    "2": "Concepción",
+                    "3": "San Fernando",
+                    "4": "Los Angeles"
+                },
+                "puntaje": {
+                    "1": 4,
+                    "2": 0,
+                    "3": 0,
+                    "4": -2
+                }
+            },
+            {
+                "id_pregunta": "c8d5210c-dee9-4412-85ee-810b2db6ddb6",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi comida favorita?",
+                "opciones": {
+                    "1": "Pizza",
+                    "2": "Pollo",
+                    "3": "Casuela",
+                    "4": "Choclo"
+                },
+                "puntaje": {
+                    "1": 0,
+                    "2": -5,
+                    "3": 0,
+                    "4": 5
+                }
+            },
+            {
+                "id_pregunta": "a541c77a-e19e-474b-a54d-64385bc08f12",
+                "tipo": "multiple",
+                "pregunta": "¿Cuál es mi superhéroe favorito?",
+                "opciones": {
+                    "1": "Batman",
+                    "2": "Superman",
+                    "3": "Wonder Woman",
+                    "4": "X men"
+                },
+                "puntaje": {
+                    "1": 5,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0
+                }
+            }
+        ]
+    }
+}
